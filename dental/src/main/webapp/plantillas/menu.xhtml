@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<h:form>
+		<p:spacer height="30" />
+		<div align="center">
+			<h4>Menú:</h4>
+			<p:tieredMenu style="width:90%">
+				
+				<p:submenu label="Administración" icon="ui-icon-extlink">
+				
+				<p:menuitem value="#{mensaje.clasesHigieneOral}"
+						outcome="/tablasSoporte/crearHigieneOral.xhtml" />
+				
+					
+				</p:submenu>
+			</p:tieredMenu>
+		</div>
+		<p:spacer height="20" />
+		<div align="center">
+			<p:commandButton value="Cerrar sesión" style="font-size:14px"
+				action="#{administrarAgrupadores.throwViewExpiredException()}"
+				process="@this" />
+		</div>
+		<!-- 
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+			onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true"
+			draggable="false" closable="false" resizable="false"
+			showHeader="false">
+			<p:graphicImage value="../imagenes/cargando.gif" />
+			</p:dialog>
+								
+		-->
+
+	</h:form>
+</ui:composition>

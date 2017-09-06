@@ -1,0 +1,157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/plantillas/principal.xhtml">
+
+	<ui:define name="body">
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" globalOnly="true" />
+			
+			<div class="row x_title">
+				<div class="col-md-6"> <h3>
+					<p:outputLabel value="#{mensaje.moduloTablasSoporte}: "
+						styleClass="tituloPrincipal" />
+					<p:spacer width="2" />
+					<p:outputLabel value="#{mensaje.crearConsentimiento}"
+						styleClass="tituloPrincipal" /></h3>
+				</div>
+			</div>
+			<div align="center" class="titulo"></div>
+			<p:outputPanel id="pnlCasoUso">
+				<p:spacer height="10" />
+				<p:accordionPanel id="pnlCrearCasoUso">
+					<p:tab title="#{hacerMantenimiento.consentimiento.accionTexto()} Consentimiento"
+						titleStyle="font-size:16px" closable="false">
+						<p:panelGrid columns="2" cellpadding="0" cellspacing="0"
+							styleClass="ui-panelgrid-blank" style="width: 100%;">
+							<p:outputLabel for="txtNombre" value="#{mensaje.nombre}"
+								style="font-weight:bold; font-size:14px; max-width:100px;" />
+							<p:inputText id="txtNombre"
+								value="#{hacerMantenimiento.consentimiento.nombre}"
+								required="true" label="#{mensaje.nombre}"
+								style="width:100%; font-size:14px" />
+							<p:outputLabel  value="#{mensaje.descripcion}"	style="font-weight:bold; font-size:14px" />
+							<p:inputTextarea 	value="#{hacerMantenimiento.consentimiento.descripcion}"
+								required="true" label="#{mensaje.descripcion}"
+								style="width:100%; font-size:14px" />	
+						</p:panelGrid>
+						<p:spacer height="10" />
+						<div align="center">
+							<p:commandButton id="btnCrearCasoUso"
+								action="#{hacerMantenimiento.guardarConsentimiento()}"
+								style="font-size:14px"
+								process=":form" value="#{mensaje.guardar}" update=":form" />
+							<p:spacer width="10" />
+							<p:commandButton id="btnBorrarCasoUso"
+								action="#{hacerMantenimiento.cancelarConsentimiento()}"
+								style="font-size:14px; font-weight: normal !important;"  
+								process="@this" value="#{mensaje.cancelar}" update=":form">
+								<p:resetInput target=":form:pnlCasoUso" />
+							</p:commandButton>
+						</div>
+						<p:outputLabel value="#{mensaje.informacionRequerida}"
+							style="font-size:10px" />
+						<p:blockUI block=":form:pnlCrearCasoUso"
+							trigger="btnCrearCasoUso, btnBorrarCasoUso">
+							<p:graphicImage value="../imagenes/cargando.gif" />
+						</p:blockUI>
+					</p:tab>
+				</p:accordionPanel>
+
+				<p:spacer height="30" />
+				<p:accordionPanel id="pnlDltRegistros">
+					<p:tab title="Clases de Consentimiento"
+						titleStyle="font-size:16px" closable="true">
+						<p:dataTable var="loc" id="dtlRegistros" widgetVar="dtlRegistros"
+							value="#{hacerMantenimiento.consentimientos}" reflow="true"
+							rows="10" paginator="true" paginatorPosition="bottom"
+							draggableColumns="true"
+							emptyMessage="#{mensaje.noExistenciaRegistros}">
+
+							<f:facet name="header">
+								<div align="right">
+									<p:outputPanel>
+										<h:outputText value="#{mensaje.buscar}: " />
+										<p:inputText id="globalFilter"
+											onkeyup="PF('dtlRegistros').filter()" style="width:350px; height:30px"
+											placeholder="#{mensaje.palabrasClave}" />
+									</p:outputPanel>
+								</div>
+							</f:facet>
+
+							<p:column headerText="#{mensaje.nombre}" sortBy="#{loc.nombre}"
+								filterMatchMode="contains" filterBy="#{loc.nombre}"
+								style="font-size:14px">
+								<p:outputLabel value="#{loc.nombre}" style="font-weight:normal" />
+							</p:column>
+
+
+							<p:column headerText="#{mensaje.indicativoVigencia}"
+								sortBy="#{loc.estado}"
+								filterBy="#{loc.estado}" style="font-size:14px;"
+								filterStyle="display:'none'" filterMatchMode="contains">
+
+								<p:outputLabel value="#{mensaje.ESTADO_ACTIVO}"
+									style="font-weight:normal"
+									rendered="#{loc.estado}" />
+								<p:outputLabel value="#{mensaje.ESTADO_INACTIVO}"
+									style="font-weight:normal"
+									rendered="#{!loc.estado}" />
+
+
+							</p:column>
+
+							<p:column headerText="#{mensaje.acciones}"
+								style="font-size:14px; text-align:center;">
+  
+								<p:commandButton   style="#{mensaje.iconoEditar}" value="" id="btnIrEditar"
+									action="#{hacerMantenimiento.asignarConsentimiento(loc)}"
+									 process="@this" update=":form" >
+									  <p:focus context=":form:pnlCrearCasoUso"/>  
+								</p:commandButton>
+
+							
+
+
+								<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
+									trackMouse="true" />
+
+
+								<p:commandButton id="btnIrEliminar"  style="#{mensaje.iconoBorrar}" 
+								
+									action="#{hacerMantenimiento.eliminarConsentimiento(loc)}"
+									value="" process="@this" update=":form" >
+									 <p:confirm header="Eliminación del Consentimientos" message="¿Desea eliminar el consentimiento?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
+									trackMouse="true" />
+
+
+							</p:column>
+
+
+
+
+						</p:dataTable>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					        <p:commandButton value="SI" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
+
+					</p:tab>
+				</p:accordionPanel>
+
+
+
+			</p:outputPanel>
+		</h:form>
+		<ui:include src="/tablasSoporte/editarAnamnesis.xhtml" />
+		<ui:include src="/tablasSoporte/eliminarAnamnesis.xhtml" />
+		<p:spacer height="500" />
+
+
+	</ui:define>
+</ui:composition>

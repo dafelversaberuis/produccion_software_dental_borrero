@@ -1,0 +1,143 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:form id="formDocumentoConsulta">
+	<p:dialog header="#{mensaje.documentosSoporteConsulta}" width="750"
+		height="400" widgetVar="panelVerDocumentoConsulta" id="panelVerDocumentoConsulta"
+		resizable="true" closable="false" responsive="true">
+		<p:outputPanel id="pnlDocumentoConsulta" >
+			<p:panelGrid style="width:100%" styleClass="ui-panelgrid-blank" 
+			rendered="#{!atencionOdontologica.consulta.modoConsulta}">
+				<p:row>
+					<p:column style="width:150px;">
+						<p:outputLabel for="txtNombre" value="#{mensaje.nombre}"
+							style="font-weight:bold; font-size:14px" />
+					</p:column>
+					<p:column>
+						<p:inputText id="txtNombre"
+							value="#{atencionOdontologica.documentoConsulta.nombre}"
+							required="true" label="#{mensaje.nombreDocumento}"
+							style="width:100%; font-size:14px; height:10px" >
+							<p:ajax event="blur" />
+						</p:inputText>
+					</p:column>
+					
+				</p:row>
+				<p:row>
+					<p:column colspan="2">
+						<p:panelGrid columns="5" style="width:100%;" rendered="#{!atencionOdontologica.consulta.modoConsulta}"
+							styleClass="ui-panelgrid-blank" id="pnlCargado">
+							<p:fileUpload id="fileCrear" cancelLabel="true" 
+								dragDropSupport="true" style="width:100%;"
+								rendered="#{atencionOdontologica.documentoConsulta.tFile==null}"
+								fileUploadListener="#{atencionOdontologica.recibirArchivoConsulta}"
+								multiple="false" fileLimit="1" fileLimitMessage="Sólo 1 archivo"
+								label="#{mensaje.busqueArchivo}" required="true" mode="advanced"
+								update="pnlDocumentoConsulta" auto="true" sizeLimit="10000000"
+								requiredMessage="Información requerida"
+								invalidSizeMessage="Excede el tamaño  permitido de 10MB!"
+								invalidFileMessage="Extensión de archivo incorrecta, solo archivos multimedia, comprimidos, archivos office"
+								allowTypes="/(\.|\/)(jpg|jpeg|gif|png|pdf|doc|docx|xls|xlsx|ppt|pps|pptx|ppsx|zip|rar|7z|mp4|mov|avi|3gp)$/" />
+	
+	
+							<p:outputLabel
+								value="#{atencionOdontologica.documentoConsulta.tFile.fileName}"
+								rendered="#{atencionOdontologica.documentoConsulta.archivo != null}" />
+	
+							<p:commandLink value="#{mensaje.limpiar}"
+								style="font-weight:bold; font-size:14px"
+								action="#{atencionOdontologica.limpiarDocumentoConsulta()}"
+								process="@this" update="pnlDocumentoConsulta"
+								rendered="#{atencionOdontologica.documentoConsulta.archivo != null}" />
+	
+							<p:graphicImage value="../imagenes/ayuda.png"
+								id="ayudaCargarArchivo" />
+							<p:tooltip value="#{mensaje.ayudaCargarArchivo}"
+								trackMouse="true" for="ayudaCargarArchivo" />
+						</p:panelGrid>
+	
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+	
+	
+			<br />
+			<div align="center">
+				<p:commandButton id="btnCrear" style="font-size:14px;" 
+					action="#{atencionOdontologica.guardarDocumentoConsulta()}" process=":formDocumentoConsulta"
+					value="#{mensaje.guardar}" update="pnlDocumentoConsulta,dtlDocumentos" 
+					rendered="#{atencionOdontologica.documentoConsulta.archivo != null}" />
+	
+				<p:spacer width="10" />
+				<p:commandButton rendered="1==2"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.abrirModal('panelConsultaCompleta')}" process="@this"
+					value="Ver opciones de la consulta" update="formDocumentoConsulta,:formAtencion:panelConsultaCompleta">	
+				</p:commandButton>
+				
+				<p:commandButton id="btnBorrar"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.cancelarDocumentoConsulta()}" process="@this"
+					value="#{mensaje.regresar}" update="pnlDocumentoConsulta">
+	
+					<p:resetInput target=":formDocumentoConsulta" />
+	
+				</p:commandButton>
+				
+			</div>
+			<p:outputLabel value="#{mensaje.informacionRequerida}"
+				style="font-size:10px" />
+	
+			<p:blockUI block=":formDocumentoConsulta"
+				trigger="btnCrear, btnBorrar">
+	
+				<p:graphicImage value="../imagenes/cargando.gif" />
+	
+	
+			</p:blockUI>
+			<p:spacer height="30" />
+			<p:dataTable var="doc" id="dtlDocumentos"
+				rendered="#{atencionOdontologica.consulta.documentos!=null}"
+				value="#{atencionOdontologica.consulta.documentos}" reflow="true"
+				rows="7" paginator="true" paginatorPosition="bottom"
+				draggableColumns="true }" emptyMessage="No existen documentos registrados para la consulta">
+
+				<p:column headerText="#{mensaje.nombre}" filterMatchMode="contains"
+					filterStyle="display:none" sortBy="#{doc.nombre}"
+					filterBy="#{doc.nombre}" style="font-size:12px">
+					<p:outputLabel value="#{doc.nombre}"
+						style="font-weight:normal; font-size:12px" />
+				</p:column>
+				<p:column headerText="#{mensaje.acciones}"
+					style="font-size:14px; text-align:center;">
+					<p:commandButton id="btnIrDescargar"
+						style="#{mensaje.iconoDescargar}"
+						action="#{atencionOdontologica.descargarDocumentoConsulta(doc)}"
+						ajax="false" immediate="true" value="" />
+	
+	
+					<p:tooltip for="btnIrDescargar" value="#{mensaje.descargarArchivo}"
+						trackMouse="true" />
+					<p:commandButton id="btnIrEliminar"
+						style="#{mensaje.iconoBorrar}"
+						action="#{atencionOdontologica.eliminarDocumentoConsulta(doc)}" value=""
+						process="dtlDocumentos"  update=":formDocumentoConsulta:dtlDocumentos"/>
+					<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
+						trackMouse="true" />
+	
+				</p:column>
+
+
+			</p:dataTable>
+		</p:outputPanel>
+
+
+	</p:dialog>
+</h:form>
+
+
+</ui:composition>

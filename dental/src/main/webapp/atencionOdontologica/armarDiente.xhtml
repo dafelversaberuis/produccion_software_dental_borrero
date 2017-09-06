@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formDiente">
+		<p:dialog
+			header="Diente #{atencionOdontologica.dienteSeleccionado.dienteTexto} - Zona de nuevo estado para el diente"
+			width="800" height="580" widgetVar="panelDetalleDiente"
+			id="panelDetalleDiente" resizable="true" closable="false"
+			responsive="true"
+			rendered="#{atencionOdontologica.dienteSeleccionado!=null}">
+			<p:outputPanel id="pnlDiente">
+				<p:panel id="pnlConsultaCompleta">
+					<p:panelGrid columns="3" cellpadding="0" cellspacing="0"
+						columnClasses="columnaExtremo,columnaCentro,columnaExtremo"
+						style="width:100%; " styleClass="ui-panelgrid-blank">
+						<p:outputLabel style="font-size:20px; font-weight:bold;"
+							value="Diente #{atencionOdontologica.dienteSeleccionado.dienteTexto}" />
+						<p:outputPanel>
+							<img src="../imagenes/dientes/zonasdiente.png"
+								style="height: 120px; width: auto" />
+						</p:outputPanel>
+
+						<p:outputLabel style="font-size:16px; font-weight:bold;"
+							styleClass="ui-message-warn ui-corner-all"
+							value="Para el diente elegido puede aplicar un estado a todo el diente ó a una de sus zonas" />
+
+
+					</p:panelGrid>
+				</p:panel>
+				<br />
+
+				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
+					id="pnlPreguntaEstado">
+					<p:row>
+
+						<p:column>
+							<p:outputLabel
+								value="¿Desea aplicar el nuevo estado a todo el diente?:" />
+						</p:column>
+						<p:column>
+							<p:selectBooleanButton
+								value="#{atencionOdontologica.dienteSeleccionado.dienteCompleto}"
+								onLabel="SI" offLabel="NO" onIcon="ui-icon-check"
+								offIcon="ui-icon-close" style="width:80px">
+								<p:ajax
+									update=":formDiente:pnlDiente, :formDiente:pnlPreguntaEstado, btnArmarDiente" />
+							</p:selectBooleanButton>
+						</p:column>
+					</p:row>
+					<p:row
+						rendered="#{atencionOdontologica.dienteSeleccionado.dienteCompleto}">
+						<p:column style="width:250px;">
+							<p:outputLabel value="¿Cuál estado dese aplicar ?, elija uno:" />
+						</p:column>
+						<p:column style="width:170px;">
+							<p:selectOneMenu style="max-width:175px; font-size:14px;"
+								label="¿Cuál estado dese aplicar ?, elija uno:"
+								value="#{atencionOdontologica.dienteSeleccionado.estadoGeneral}">
+								<f:selectItems
+									value="#{atencionOdontologica.itemsEstadosDiente}" />
+
+								<p:ajax event="change" process="@this" update="btnArmarDiente" />
+							</p:selectOneMenu>
+						</p:column>
+
+
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
+					id="pnlDienteCompleto"
+					rendered="#{!atencionOdontologica.dienteSeleccionado.dienteCompleto}">
+
+					<p:row>
+
+						<p:column style="vertical-align:middle !important">
+							<p:outputLabel
+								value="Elija para cada zona el estado del diente que aplica:" />
+						</p:column>
+
+						<p:column>
+							<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
+								columns="2">
+								<p:outputLabel value="Zona 1:" />
+								<p:selectOneMenu style="max-width:175px; font-size:14px;"
+									label="Zona 1"
+									value="#{atencionOdontologica.dienteSeleccionado.estadoOclusal}">
+									<f:selectItems
+										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
+									<p:ajax event="change" process="@this" update="btnArmarDiente" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Zona 2:" />
+								<p:selectOneMenu style="max-width:175px; font-size:14px;"
+									label="Estado Vestibular"
+									value="#{atencionOdontologica.dienteSeleccionado.estadoVestibular}">
+									<f:selectItems
+										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
+									<p:ajax event="change" process="@this" update="btnArmarDiente" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Zona 3:" />
+								<p:selectOneMenu style="max-width:175px; font-size:14px;"
+									label="Zona 3"
+									value="#{atencionOdontologica.dienteSeleccionado.estadoPalatino}">
+									<f:selectItems
+										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
+									<p:ajax event="change" process="@this" update="btnArmarDiente" />
+								</p:selectOneMenu>
+
+								<p:outputLabel value="Zona 4:" />
+								<p:selectOneMenu style="max-width:175px; font-size:14px;"
+									label="Estado Distal"
+									value="#{atencionOdontologica.dienteSeleccionado.estadoDistal}">
+									<f:selectItems
+										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
+									<p:ajax event="change" process="@this" update="btnArmarDiente" />
+								</p:selectOneMenu>
+								<p:outputLabel value="Zona 5:" />
+								<p:selectOneMenu style="max-width:175px; font-size:14px;"
+									label="Estado Esmalte"
+									value="#{atencionOdontologica.dienteSeleccionado.estadoEsmalte}">
+									<f:selectItems
+										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
+									<p:ajax event="change" process="@this" update="btnArmarDiente" />
+								</p:selectOneMenu>
+
+							</p:panelGrid>
+
+						</p:column>
+
+					</p:row>
+
+
+				</p:panelGrid>
+
+				<p:spacer height="10" />
+				<div align="center">
+					<p:commandButton id="btnArmarDiente"
+						disabled="#{(atencionOdontologica.dienteSeleccionado.dienteCompleto and (atencionOdontologica.dienteSeleccionado.estadoGeneral==null or atencionOdontologica.dienteSeleccionado.estadoGeneral==''))    or    (!atencionOdontologica.dienteSeleccionado.dienteCompleto   and           (atencionOdontologica.dienteSeleccionado.estadoOclusal==null or atencionOdontologica.dienteSeleccionado.estadoOclusal=='')  and (atencionOdontologica.dienteSeleccionado.estadoVestibular==null or atencionOdontologica.dienteSeleccionado.estadoVestibular=='')    and  (atencionOdontologica.dienteSeleccionado.estadoPalatino==null or atencionOdontologica.dienteSeleccionado.estadoPalatino=='') and (atencionOdontologica.dienteSeleccionado.estadoDistal==null or atencionOdontologica.dienteSeleccionado.estadoDistal=='')   and (atencionOdontologica.dienteSeleccionado.estadoEsmalte==null or atencionOdontologica.dienteSeleccionado.estadoEsmalte==''))}"
+						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+						action="#{atencionOdontologica.armarDiente(true)}"
+						process=":formDiente"
+						oncomplete="#{atencionOdontologica.setVistaActual(2)}"
+						value="Aceptar" update=":formDiente, :formAtencion" />
+					<p:commandButton id="btnRegresarDiente"
+						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+						action="#{atencionOdontologica.cerrarDiente()}" process="@this"
+						value="#{mensaje.regresar}" update=":formDiente">
+					</p:commandButton>
+
+				</div>
+				<p:outputLabel value="#{mensaje.informacionRequerida}"
+					style="font-size:10px" />
+
+				<p:blockUI block=":formDiente:pnlDiente" trigger="btnRegresarDiente">
+					<p:outputLabel value="Foto Actual:" styleClass="textoNegrita" />
+					<p:graphicImage value="../imagenes/cargando.gif" />
+				</p:blockUI>
+
+
+			</p:outputPanel>
+
+		</p:dialog>
+	</h:form>
+
+
+</ui:composition>

@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- Inicio Modal acciones Tratamiento -->
+	<p:dialog header="TRATAMIENTO REGISTRADO..." width="600"
+		rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicion}"
+		widgetVar="panelTratamientoCompleto" id="panelTratamientoCompleto"
+		modal="true" resizable="true" closable="true" responsive="true">
+		<div align="center">
+			<p:panel id="pnlTratamientoCompleto">
+				<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+					styleClass="ui-panelgrid-blank">
+
+
+					<div class="ui-message-warn ui-corner-all" align="center">
+						TRATAMIENTO REGISTRADO/ACTUALIZADO PARA EL PACIENTE. Seleccione
+						una acción a realizar</div>
+
+				</p:panelGrid>
+			</p:panel>
+			<br />
+			<p:commandButton id="btnConsentimiento" process="@this"
+				style="font-size:16px; font-weight:bold !important;width: 100%;"
+				action="#{atencionOdontologica.cargarConsentimiento(atencionOdontologica.tratamientoUsuario)}"
+				value="Registrar/visualizar Consentimiento"
+				update="formAtencion:panelTratamientoCompleto,:formConsentimiento" />
+
+			<p:commandButton id="btnEvolucionTratamiento"
+				style="width: 100%;font-size:14px; font-weight:normal !important"
+				disabled="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+				action="#{atencionOdontologica.cargarEvolucionesTratamiento(atencionOdontologica.tratamientoUsuario)}"
+				value="Cargar Evolucion del tratamiento"
+				update="formAtencion:panelTratamientoCompleto,:formAtencion:panelEvolucion"
+				process="@this" />
+
+			<p:commandButton id="btnImpCotizacion" process="@this"
+				style="font-size:14px; font-weight:normal !important;width: 100%;"
+				action="#{atencionOdontologica.imprimirCotizacion()}"
+				value="Imprimir cotizacion del tratamiento" ajax="false"
+				update="formAtencion:panelTratamientoCompleto" />
+
+			<p:commandButton
+				style="font-size:14px; font-weight:normal !important;width: 100%;"
+				update="formAtencion:panelTratamientoCompleto"
+				action="#{atencionOdontologica.setVistaActual(3)}" process="@this"
+				value="(X) Cerrar diálogo y continuar en esta pantalla">
+			</p:commandButton>
+
+		</div>
+	</p:dialog>
+	<!-- Fin Modal acciones Tratamiento -->
+
+	<!-- Inicio Modal acciones Paciente registrado -->
+	<p:dialog header="PACIENTE REGISTRADO..." width="600"
+		rendered="#{atencionOdontologica.usuario.modoEdicion}"
+		widgetVar="panelUsuarioCompleto" id="panelUsuarioCompleto"
+		modal="true" resizable="true" closable="true" responsive="true">
+		<div align="center">
+			<p:panel id="pnlDiagnosticoCompleto">
+				<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+					style="font-weight:bold" styleClass="ui-panelgrid-blank">
+
+
+					<div class="ui-message-warn ui-corner-all" align="center">
+						DATOS DEL PACIENTE GUARDADOS/ACTUALIZADOS. Seleccione una acción a
+						realizar</div>
+
+				</p:panelGrid>
+			</p:panel>
+			<br />
+			<p:commandButton
+				style="width: 100%;font-size:16px; font-weight:bold !important"
+				rendered="#{atencionOdontologica.usuario.modoEdicion}"
+				action="#{atencionOdontologica.guardarPrimeraVez()}" process="@this"
+				update="formAtencion:panelUsuarioCompleto,formAtencion:tabAtencion"
+				value="Proceder a registrar una nueva consulta al paciente">
+				<p:focus context=":formAtencion:tabAtencion:pnlExamen" />
+			</p:commandButton>
+
+
+
+
+			<p:commandButton id="btnDocumentosUsuario2" rendered="1==2"
+				style="width: 70%;font-size:14px; font-weight:normal !important"
+				action="#{atencionOdontologica.cargarDocumentoUsuario()}"
+				value="2. Cargar Documentos del paciente"
+				update=":formAtencion:panelUsuarioCompleto,:formDocumentoUsuario:panelVerDocumento"
+				process="@this" />
+
+			<p:tooltip for="btnDocumentosUsuario2" rendered="1==2"
+				value="Cargar/Visualizar Documentos adjuntos del paciente"
+				trackMouse="true" />
+
+			<p:commandButton rendered="1==2"
+				style="width: 70%;font-size:14px; font-weight:normal !important"
+				update="formAtencion:panelUsuarioCompleto" process="@this"
+				value="Proceder a editar una consulta previa">
+				<p:focus context="formAtencion:tabAtencion:dtbConsultasUsuario" />
+			</p:commandButton>
+
+			<p:commandButton
+				style="width: 100%;font-size:14px; font-weight:normal !important"
+				rendered="#{atencionOdontologica.usuario.modoEdicion}"
+				action="#{atencionOdontologica.setVistaActual(3)}" process="@this"
+				update="formAtencion:panelUsuarioCompleto,formAtencion:tabAtencion"
+				value="Ver los tratamientos del paciente" />
+
+
+			<p:commandButton
+				style="font-size:14px; font-weight:normal !important;width: 100%;"
+				update="formAtencion:panelUsuarioCompleto" process="@this"
+				value="(X) Cerrar diálogo y continuar en esta pantalla">
+				<p:focus context=":formAtencion:tabAtencion:txtNombre" />
+			</p:commandButton>
+
+
+
+		</div>
+	</p:dialog>
+	<!-- Fin Modal acciones Paciente registrado -->
+
+	<!-- Inicio Modal Consulta Registrada  -->
+	<p:dialog header="CONSULTA REGISTRADA/ACTUALIZDA..." width="600"
+		rendered="#{atencionOdontologica.usuario.modoEdicion}"
+		widgetVar="panelConsultaCompleta" id="panelConsultaCompleta"
+		modal="true" resizable="true" closable="true" responsive="true">
+		<div align="center">
+			<p:panel id="pnlConsultaCompleta">
+				<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+					styleClass="ui-panelgrid-blank">
+
+
+					<div class="ui-message-warn ui-corner-all" align="center">
+						Fecha que identifica la consulta del paciente:
+						#{consultarFuncionesAPI.getFechaHora(atencionOdontologica.consulta.fechaConsulta)}.
+						Seleccione una acción a realizar</div>
+
+				</p:panelGrid>
+			</p:panel>
+			<br />
+			<p:commandButton id="btnRegistarOdontogramaConsulta"
+				style="width: 100%;font-size:16px; font-weight:bold !important"
+				rendered="#{atencionOdontologica.usuario.modoEdicion}"
+				action="#{atencionOdontologica.setVistaActual(2)}"
+				disabled="#{atencionOdontologica.consulta.consultaEscaneada}"
+				process="@this"
+				update="formAtencion:panelConsultaCompleta,formAtencion:tabAtencion"
+				value="Proceder a registrar/editar Odontograma" />
+
+			<p:tooltip for="btnRegistarOdontogramaConsulta" trackMouse="true"
+				rendered="#{atencionOdontologica.consulta.consultaEscaneada}"
+				value="Los Odontogramas no están disponibles para las consultas escaneadas" />
+
+			<p:commandButton
+				style="width: 100%;font-size:14px; font-weight:normal !important"
+				rendered="#{atencionOdontologica.usuario.modoEdicion}"
+				action="#{atencionOdontologica.setVistaActual(3)}" process="@this"
+				update="formAtencion:panelConsultaCompleta,formAtencion:tabAtencion"
+				value="Ver los tratamientos del paciente" />
+
+			<p:commandButton
+				style="font-size:14px; font-weight:normal !important;width: 100%;"
+				update="formAtencion:panelConsultaCompleta"
+				action="#{atencionOdontologica.setVistaActual(1)}" process="@this"
+				value="(X) Cerrar diálogo y continuar en esta pantalla">
+				<p:focus context=":formAtencion:tabAtencion:pnlExamen" />
+			</p:commandButton>
+
+
+			<p:commandButton id="btnDocumentosConsulta2" rendered="1==2"
+				style="width: 70%;font-size:14px; font-weight:normal !important"
+				action="#{atencionOdontologica.cargarDocumentoConsulta(atencionOdontologica.consulta)}"
+				value="2. Cargar Documentos de la consulta"
+				update=":formAtencion:panelConsultaCompleta,:formDocumentoConsulta:panelVerDocumentoConsulta"
+				process="@this" />
+
+
+
+
+
+
+		</div>
+	</p:dialog>
+	<!-- Fin Modal acciones Consulta Registrada -->
+
+	<!-- Inicio Modal acciones Odontograma registrado -->
+	<p:dialog header="ODONTOGRAMA REGISTRADO/ACTUALIZADO..." width="600"
+		rendered="#{atencionOdontologica.consulta.modoEdicion}"
+		widgetVar="panelOdontogramaCompleto" id="panelOdontogramaCompleto"
+		modal="true" resizable="true" closable="true" responsive="true">
+		<div align="center">
+			<p:panel id="pnlOdontogramaCompleto">
+				<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+					styleClass="ui-panelgrid-blank">
+
+
+					<div class="ui-message-warn ui-corner-all" align="center">
+						Fecha que identifica el odontograma de la consulta del paciente:
+						#{consultarFuncionesAPI.getFechaHora(atencionOdontologica.consulta.fechaConsulta)}.
+						Seleccione una acción a realizar</div>
+
+				</p:panelGrid>
+			</p:panel>
+			<br />
+			<p:commandButton
+				style="width: 100%;font-size:16px; font-weight:bold !important"
+				rendered="#{atencionOdontologica.consulta.modoEdicion}"
+				action="#{atencionOdontologica.setVistaActual(3)}" process="@this"
+				update="formAtencion:panelOdontogramaCompleto,formAtencion:tabAtencion"
+				value="Proceder a ver/editar tratamientos del paciente" />
+			<p:commandButton
+				style="font-size:14px; font-weight:normal !important;width: 100%;"
+				update="formAtencion:panelOdontogramaCompleto,formAtencion:tabAtencion"
+				action="#{atencionOdontologica.setVistaActual(2)}" process="@this"
+				value="(X) Cerrar diálogo y continuar en esta pantalla de Odontograma">
+			</p:commandButton>
+
+
+
+
+		</div>
+	</p:dialog>
+	<!-- Fin Modal acciones Odontograma registrado  -->
+
+</ui:composition>

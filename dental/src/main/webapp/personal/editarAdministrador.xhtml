@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formEditar">
+
+		<p:dialog header="#{mensaje.editarAdministrador}"
+			widgetVar="panelEdicionAdministrador" resizable="true"
+			closable="false" responsive="true">
+			<p:panel id="pnlEditarAdministrador">
+				<div align="center">
+
+
+					<p:panelGrid columns="5" cellpadding="0" cellspacing="0"
+						styleClass="ui-panelgrid-blank">
+
+						<p:outputLabel for="txtNombres" value="#{mensaje.nombres}"
+							style="font-weight:bold; font-size:14px" />
+						<p:inputText id="txtNombres"
+							value="#{administrarPersonal.personalTransaccion.nombres}"
+							required="true" label="#{mensaje.nombres}"
+							style="width:100%; font-size:14px" />
+
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="txtNombres" />
+
+
+						<p:outputLabel for="txtApellidos" value="#{mensaje.apellidos}"
+							style="font-weight:bold; font-size:14px" />
+						<p:inputText id="txtApellidos"
+							value="#{administrarPersonal.personalTransaccion.apellidos}"
+							required="true" label="#{mensaje.apellidos}"
+							style="width:100%; font-size:14px" />
+
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="txtApellidos" />
+						<p:outputLabel for="calFechaNacimiento"	value="Fecha nacimiento"	styleClass="textoNegrita" /> 
+						<h:panelGrid  columns="3" width="100%">
+					   		 <p:calendar id="calFechaNacimiento" label="Fecha nacimiento"
+								value="#{administrarPersonal.personalTransaccion.fechaNacimiento}"
+								 size="10" 	style="width:70px; "  mask="true"	pages="#{mensaje.calendario_paginado}" 
+       							pattern="#{mensaje.calendario_formatoFecha}" locale="#{mensaje.calendario_locale}"
+       							navigator="#{mensaje.calendario_isNavegacion}"  yearRange="c-50:c" >
+       							<p:ajax event="dateSelect" update="edadTexto" />
+       						</p:calendar>  
+       						<p:outputLabel id="edadTexto" value="#{administrarPersonal.personalTransaccion.edadTexto} "	 />
+       						
+       					</h:panelGrid>
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="calFechaNacimiento" />
+						<p:outputLabel for="lstEstadoCivil" value="Estado civil"	styleClass="textoNegrita" /> 
+				   		 <p:selectOneMenu id="lstEstadoCivil" required="false"
+							style="width:100%; font-size:14px;"
+							value="#{administrarPersonal.personalTransaccion.estadoCivil}"
+							label="Estado civil">
+							<f:selectItem itemValue="S" itemLabel="Soltero/a" />
+							<f:selectItem itemValue="C" itemLabel="Casado/a" />
+							<f:selectItem itemValue="V" itemLabel="Viudo/a" />
+							<f:selectItem itemValue="D" itemLabel="Divorciado/a" />
+						</p:selectOneMenu>
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="lstEstadoCivil" />
+						<p:outputLabel for="lstGenero" value="Género" styleClass="textoNegrita"  />  	  
+						<p:selectOneRadio  id="lstGenero" required="false"
+							style="width:100%; font-size:14px; "
+							value="#{administrarPersonal.personalTransaccion.genero}" label="Genero">
+							<f:selectItem itemValue="M" itemLabel="Masculino" />
+							<f:selectItem itemValue="F" itemLabel="Femenino" />
+						</p:selectOneRadio>	
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="lstGenero" />
+						<p:outputLabel for="txtTelefono" value="Teléfono" styleClass="textoNegrita" />
+						<p:inputNumber id="txtTelefono"		value="#{administrarPersonal.personalTransaccion.telefono}"
+								     size="12"  decimalPlaces="0" thousandSeparator="" 	 emptyValue="empty"     style="width:50px; " /> 
+						
+						<p:spacer width="1" />
+						<p:spacer width="1" />
+						<p:message for="txtTelefono" />
+						<p:outputLabel for="txtCorreo" value="#{mensaje.correo}"
+							style="font-weight:bold; font-size:14px" />
+						<p:inputText id="txtCorreo"
+							value="#{administrarPersonal.personalTransaccion.correoElectronico}"
+							required="true" label="#{mensaje.correo}"
+							style="width:100%; font-size:14px" />
+
+						<p:graphicImage value="../imagenes/ayuda.png"
+							id="ayudaCorreoAdministrador" />
+						<p:tooltip value="#{mensaje.ayudaCorreoAdministrador}"
+							trackMouse="true" for="ayudaCorreoAdministrador" />
+						<p:message for="txtCorreo" />
+
+						<p:outputLabel for="lstIndicativo" value="#{mensaje.indicativo}"
+							style="font-weight:bold; font-size:14px;" />
+						<p:selectOneMenu id="lstIndicativo" required="true"
+							style="font-size:14px;"
+							value="#{administrarPersonal.personalTransaccion.estado}"
+							label="#{mensaje.indicativo}">
+							<f:selectItems value="#{consultarFuncionesAPI.itemsEstados}" />
+						</p:selectOneMenu>
+						<p:graphicImage value="../imagenes/ayuda.png"
+							id="ayudaIndicativoEstado" />
+						<p:tooltip value="#{mensaje.ayudaIndicativoEstado}"
+							trackMouse="true" for="ayudaIndicativoEstado" />
+						<p:message for="lstIndicativo" />
+
+						
+						<p:outputLabel for="lstTipoUsuario" value="Tipo de Usuario"
+							style="font-weight:bold; font-size:14px;" />
+						<p:selectOneMenu  id="lstTipoUsuario" required="true"
+							style="width:100%; font-size:14px; "
+							value="#{administrarPersonal.personalTransaccion.tipoAdministracion}" label="Tipo Usuario">
+							<f:selectItem itemValue="C" itemLabel="Cliente" />
+							<f:selectItem itemValue="A" itemLabel="Administrador" />
+							<f:selectItem itemValue="O" itemLabel="Odontólogo" />
+							<f:selectItem itemValue="X" itemLabel="Auxiliar" />
+							<f:selectItem itemValue="S" itemLabel="Secretaria" />
+						 </p:selectOneMenu>
+
+
+
+
+
+
+
+					</p:panelGrid>
+
+
+
+				</div>
+				<br />
+				<br />
+				<div align="center">
+					<p:commandButton id="btnEditarAdministrador" style="font-size:14px"
+						action="#{administrarPersonal.editarAdministrador()}"
+						value="#{mensaje.editar}"
+						process=":formEditar:pnlEditarAdministrador"
+						update=":formEditar:pnlEditarAdministrador, :form" />
+					<p:spacer width="10" />
+					<p:commandButton id="btnCancelarEdicionAdministrador"
+						style="font-size:14px; font-weight: normal !important;"
+						action="#{administrarPersonal.cancelarAdministradorTransaccion('MODAL_EDITAR_ADMINISTRADOR')}"
+						process="@this" value="#{mensaje.cancelar}" update=":form">
+						<p:resetInput target=":formEditar, :form" />
+					</p:commandButton>
+
+				</div>
+
+				<p:outputLabel value="#{mensaje.informacionRequerida}"
+					style="font-size:10px" />
+				<p:blockUI block=":formEditar:pnlEditarAdministrador"
+					trigger="btnEditarAdministrador, btnCancelarEdicionAdministrador">
+					<p:graphicImage value="../imagenes/cargando.gif" />
+				</p:blockUI>
+
+			</p:panel>
+		</p:dialog>
+		<p:blockUI block="pnlEditarAdministrador"
+			trigger="btnEditarAdministrador" />
+
+	</h:form>
+</ui:composition>

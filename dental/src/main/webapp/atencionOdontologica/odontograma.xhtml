@@ -1,0 +1,448 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+	<ui:define name="body">
+		<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 20%;
+}
+
+.ui-panelgrid-cell {
+			    border-width: 1px;
+			    border-style: solid;
+			    border-color: inherit;
+			    padding: 4px 4px 0px !important;
+}
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 30px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding: .6em 1em;
+    width: 100%;
+}
+ui-fieldset-content{
+	padding: 10px;
+}
+
+.ui-inputfield{
+height: 30px;
+
+}
+.inputTexto{	   
+	    font-size: 13px!important;
+	    height: 30px;    }
+.textoNegrita{
+	font-weight:bold!important;
+	font-size:14px!important;
+}
+.ui-button-text-only .ui-button-text {
+    padding: .3em 0em;
+}
+.botonOdontograma{
+	background-origin: content-box; 
+	background-image: url('../imagenes/dientes/dientesano.png');	
+	background-size: cover;
+	float:right; 
+	background-repeat:no-repeat; 
+	width:60px; 
+	height:60px;
+	border:0; 
+	background-color:transparent"
+}
+.ui-inputtextarea{
+	height:100px;
+}
+.ui-datatable-scrollable-theadclone {
+	visibility: hidden;
+}
+</style>
+						
+ <div align="center">
+ 	<h:panelGrid columns="3">
+ 		<p:column style="width:150px;"> 
+	   		<p:outputLabel value="¿Aplicar estado a múltiples dientes?"/>
+	   </p:column>	
+	    <p:column  >
+	    	<p:selectBooleanButton  value="#{atencionOdontologica.consulta.cargueRapido}" 
+				onLabel="SI" offLabel="NO" 	onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:80px" >
+				 <p:ajax update=":formAtencion:tabAtencion"  />
+			</p:selectBooleanButton>
+		</p:column>
+	 		<p:selectOneMenu id="lstEstadosDiente" 		style="width:100%; font-size:14px;" 
+			value="#{atencionOdontologica.estadoDienteSeleccionado.id}"
+			label="Estado Diente" rendered="#{atencionOdontologica.consulta.cargueRapido}">
+			    <f:selectItems value="#{atencionOdontologica.itemsEstadosDiente}" />
+		</p:selectOneMenu>
+	 </h:panelGrid>
+	<h:panelGrid columns="17" style="width:1000px;">
+		<h:panelGrid style="text-align: center;"  id="diente18"	>	
+		  18<p:commandButton id="btn18" style="#{atencionOdontologica.cargarImagenOdontograma(1,8)}"
+				action="#{atencionOdontologica.cargarDiente(1,8)}"	 process="pnlOdontograma"
+				value="" 	update=":formDiente,btn18"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;"  >	
+		  17<p:commandButton id="btn17" style="#{atencionOdontologica.cargarImagenOdontograma(1,7)}"
+				action="#{atencionOdontologica.cargarDiente(1,7)}"	
+				value=""  process="pnlOdontograma"	update=":formDiente,btn17"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;"  >	
+		  16<p:commandButton id="btn16" style="#{atencionOdontologica.cargarImagenOdontograma(1,6)}"
+				action="#{atencionOdontologica.cargarDiente(1,6)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn16"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  15<p:commandButton id="btn15" style="#{atencionOdontologica.cargarImagenOdontograma(1,5)}"
+				action="#{atencionOdontologica.cargarDiente(1,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn15"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  14<p:commandButton id="btn14" style="#{atencionOdontologica.cargarImagenOdontograma(1,4)}"
+				action="#{atencionOdontologica.cargarDiente(1,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn14"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  13<p:commandButton id="btn13" style="#{atencionOdontologica.cargarImagenOdontograma(1,3)}"
+				action="#{atencionOdontologica.cargarDiente(1,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn13"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  12<p:commandButton id="btn12" style="#{atencionOdontologica.cargarImagenOdontograma(1,2)}"
+				action="#{atencionOdontologica.cargarDiente(1,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn12"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  11<p:commandButton id="btn11" style="#{atencionOdontologica.cargarImagenOdontograma(1,1)}"
+				action="#{atencionOdontologica.cargarDiente(1,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn11"				/>						 
+		</h:panelGrid>
+		
+		<p:spacer />
+		
+		<h:panelGrid style="text-align: center;" 	>	
+		  21<p:commandButton id="btn21" style="#{atencionOdontologica.cargarImagenOdontograma(2,1)}"
+				action="#{atencionOdontologica.cargarDiente(2,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn21"				/>						 
+		</h:panelGrid>					
+		<h:panelGrid style="text-align: center;" 	>	
+		  22<p:commandButton id="btn22" style="#{atencionOdontologica.cargarImagenOdontograma(2,2)}"
+				action="#{atencionOdontologica.cargarDiente(2,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn22"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  23<p:commandButton id="btn23" style="#{atencionOdontologica.cargarImagenOdontograma(2,3)}"
+				action="#{atencionOdontologica.cargarDiente(2,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn23"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  24<p:commandButton id="btn24" style="#{atencionOdontologica.cargarImagenOdontograma(2,4)}"
+				action="#{atencionOdontologica.cargarDiente(2,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn24"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  25<p:commandButton id="btn25" style="#{atencionOdontologica.cargarImagenOdontograma(2,5)}"
+				action="#{atencionOdontologica.cargarDiente(2,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn25"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  26<p:commandButton id="btn26" style="#{atencionOdontologica.cargarImagenOdontograma(2,6)}"
+				action="#{atencionOdontologica.cargarDiente(2,6)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn26"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  27<p:commandButton id="btn27" style="#{atencionOdontologica.cargarImagenOdontograma(2,7)}"
+				action="#{atencionOdontologica.cargarDiente(2,7)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn27"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  28<p:commandButton id="btn28" style="#{atencionOdontologica.cargarImagenOdontograma(2,8)}"
+				action="#{atencionOdontologica.cargarDiente(2,8)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn28"				/>						 
+		</h:panelGrid>	
+		
+		
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn48" style="#{atencionOdontologica.cargarImagenOdontograma(4,8)}"
+				action="#{atencionOdontologica.cargarDiente(4,8)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn48"				/>48						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn47" style="#{atencionOdontologica.cargarImagenOdontograma(4,7)}"
+				action="#{atencionOdontologica.cargarDiente(4,7)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn47"				/>47						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn46" style="#{atencionOdontologica.cargarImagenOdontograma(4,6)}"
+				action="#{atencionOdontologica.cargarDiente(4,6)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn46"				/>46						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn45" style="#{atencionOdontologica.cargarImagenOdontograma(4,5)}"
+				action="#{atencionOdontologica.cargarDiente(4,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn45"				/>	45					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn44" style="#{atencionOdontologica.cargarImagenOdontograma(4,4)}"
+				action="#{atencionOdontologica.cargarDiente(4,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn44"				/>44						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn43" style="#{atencionOdontologica.cargarImagenOdontograma(4,3)}"
+				action="#{atencionOdontologica.cargarDiente(4,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn43"				/>	43					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn42" style="#{atencionOdontologica.cargarImagenOdontograma(4,2)}"
+				action="#{atencionOdontologica.cargarDiente(4,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn42"				/>	42					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn41" style="#{atencionOdontologica.cargarImagenOdontograma(4,1)}"
+				action="#{atencionOdontologica.cargarDiente(4,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn41"				/>	41					 
+		</h:panelGrid>
+		
+		<p:spacer />
+		
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn31" style="#{atencionOdontologica.cargarImagenOdontograma(3,1)}"
+				action="#{atencionOdontologica.cargarDiente(3,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn31"				/>31						 
+		</h:panelGrid>					
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn32" style="#{atencionOdontologica.cargarImagenOdontograma(3,2)}"
+				action="#{atencionOdontologica.cargarDiente(3,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn32"				/>	32					 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn33" style="#{atencionOdontologica.cargarImagenOdontograma(3,3)}"
+				action="#{atencionOdontologica.cargarDiente(3,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn33"				/>	33					 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn34" style="#{atencionOdontologica.cargarImagenOdontograma(3,4)}"
+				action="#{atencionOdontologica.cargarDiente(3,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn34"				/>34						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn35" style="#{atencionOdontologica.cargarImagenOdontograma(3,5)}"
+				action="#{atencionOdontologica.cargarDiente(3,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn35"				/>35						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn36" style="#{atencionOdontologica.cargarImagenOdontograma(3,6)}"
+				action="#{atencionOdontologica.cargarDiente(3,6)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn36"				/>36						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn37" style="#{atencionOdontologica.cargarImagenOdontograma(3,7)}"
+				action="#{atencionOdontologica.cargarDiente(3,7)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn37"				/>37						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn38" style="#{atencionOdontologica.cargarImagenOdontograma(3,8)}"
+				action="#{atencionOdontologica.cargarDiente(3,8)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn38"				/>38						 
+		</h:panelGrid>	
+		
+		
+		<p:spacer />
+		<p:spacer />
+		<p:spacer />
+		<h:panelGrid style="text-align: center;"  >	
+		  55<p:commandButton id="btn55" style="#{atencionOdontologica.cargarImagenOdontograma(5,5)}"
+				action="#{atencionOdontologica.cargarDiente(5,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn55"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  54<p:commandButton id="btn54" style="#{atencionOdontologica.cargarImagenOdontograma(5,4)}"
+				action="#{atencionOdontologica.cargarDiente(5,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn54"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  53<p:commandButton id="btn53" style="#{atencionOdontologica.cargarImagenOdontograma(5,3)}"
+				action="#{atencionOdontologica.cargarDiente(5,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn53"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  52<p:commandButton id="btn52" style="#{atencionOdontologica.cargarImagenOdontograma(5,2)}"
+				action="#{atencionOdontologica.cargarDiente(5,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn52"				/>						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  51<p:commandButton id="btn51" style="#{atencionOdontologica.cargarImagenOdontograma(5,1)}"
+				action="#{atencionOdontologica.cargarDiente(5,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn51"				/>						 
+		</h:panelGrid>
+		
+		<p:spacer />
+		
+		<h:panelGrid style="text-align: center;" 	>	
+		  61<p:commandButton id="btn61" style="#{atencionOdontologica.cargarImagenOdontograma(6,1)}"
+				action="#{atencionOdontologica.cargarDiente(6,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn61"				/>						 
+		</h:panelGrid>					
+		<h:panelGrid style="text-align: center;" 	>	
+		  62<p:commandButton id="btn62" style="#{atencionOdontologica.cargarImagenOdontograma(6,2)}"
+				action="#{atencionOdontologica.cargarDiente(6,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn62"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  63<p:commandButton id="btn63" style="#{atencionOdontologica.cargarImagenOdontograma(6,3)}"
+				action="#{atencionOdontologica.cargarDiente(6,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn63"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  64<p:commandButton id="btn64" style="#{atencionOdontologica.cargarImagenOdontograma(6,4)}"
+				action="#{atencionOdontologica.cargarDiente(6,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn64"				/>						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  65<p:commandButton id="btn65" style="#{atencionOdontologica.cargarImagenOdontograma(6,5)}"
+				action="#{atencionOdontologica.cargarDiente(6,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn65"				/>						 
+		</h:panelGrid>	
+		<p:spacer />
+		<p:spacer />
+		<p:spacer />
+		
+		
+		<p:spacer />
+		<p:spacer />
+		<p:spacer />
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn85" style="#{atencionOdontologica.cargarImagenOdontograma(8,5)}"
+				action="#{atencionOdontologica.cargarDiente(8,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn85"				/>	85					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn84" style="#{atencionOdontologica.cargarImagenOdontograma(8,4)}"
+				action="#{atencionOdontologica.cargarDiente(8,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn84"				/>84						 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn83" style="#{atencionOdontologica.cargarImagenOdontograma(8,3)}"
+				action="#{atencionOdontologica.cargarDiente(8,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn83"				/>	83					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn82" style="#{atencionOdontologica.cargarImagenOdontograma(8,2)}"
+				action="#{atencionOdontologica.cargarDiente(8,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn82"				/>	82					 
+		</h:panelGrid>
+		<h:panelGrid style="text-align: center;"  >	
+		  <p:commandButton id="btn81" style="#{atencionOdontologica.cargarImagenOdontograma(8,1)}"
+				action="#{atencionOdontologica.cargarDiente(8,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn81"				/>	81					 
+		</h:panelGrid>
+		
+		<p:spacer />
+		
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn71" style="#{atencionOdontologica.cargarImagenOdontograma(7,1)}"
+				action="#{atencionOdontologica.cargarDiente(7,1)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn71"				/>71						 
+		</h:panelGrid>					
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn72" style="#{atencionOdontologica.cargarImagenOdontograma(7,2)}"
+				action="#{atencionOdontologica.cargarDiente(7,2)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn72"				/>	72					 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn73" style="#{atencionOdontologica.cargarImagenOdontograma(7,3)}"
+				action="#{atencionOdontologica.cargarDiente(7,3)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn73"				/>	73					 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn74" style="#{atencionOdontologica.cargarImagenOdontograma(7,4)}"
+				action="#{atencionOdontologica.cargarDiente(7,4)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn74"				/>74						 
+		</h:panelGrid>	
+		<h:panelGrid style="text-align: center;" 	>	
+		  <p:commandButton id="btn75" style="#{atencionOdontologica.cargarImagenOdontograma(7,5)}"
+				action="#{atencionOdontologica.cargarDiente(7,5)}"	
+				value=""  process="pnlOdontograma"	update="dtbDiagnosticoOdontograma,:formDiente,btn75"				/>75						 
+		</h:panelGrid>	
+		<p:spacer />
+		<p:spacer />
+		<p:spacer />
+	
+	</h:panelGrid>
+	<br/>
+	<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
+		<p:row >
+	       <p:column >
+	       		<p:outputLabel for="txtObservacionOdontograma" value="Observaciones Odontograma:" styleClass="textoNegrita"  />
+	       		<br/>
+	       		<p:commandButton style="font-size:14px; font-weight:normal !important"
+					action="#{atencionOdontologica.cargarObservacionesOdontograma()}"
+					process="@this" update=":formAtencion:tabAtencion,txtObservacionOdontograma" value="Cargar Observaciones" />
+		   </p:column>
+		   <p:column colspan="3" style="width:80%">						   		
+				<p:textEditor widgetVar="txtObservacionOdontograma" 
+				value="#{atencionOdontologica.consulta.observacionesOdontograma}"
+						id="txtObservacionOdontograma" 	height="250" style="width:90%;margin-bottom:10px">
+			        <f:facet name="toolbar">
+			             <span class="ql-formats">
+			                <button class="ql-bold"></button>
+			                <button class="ql-italic"></button>
+			                <button class="ql-underline"></button>
+			                <button class="ql-strike"></button>
+			            </span>							           
+			        </f:facet>
+			    </p:textEditor>
+		   </p:column>
+		</p:row>
+		
+	</p:panelGrid>
+	<p:dataTable id="dtbDiagnosticoOdontograma" value="#{atencionOdontologica.estadosDiente}" var="e"  
+		emptyMessage="" rendered="false">					 	 	
+	       			          			 	 	
+	          <p:column headerText="Diagnostico del Paciente">
+	          	<h:outputText value="#{e.nombre}" />
+	           </p:column>	
+	           <p:column headerText="Dientes"> 
+	          	<h:outputText value="#{e.diagnosticoOdontograma}" />
+	           </p:column>			
+		</p:dataTable>	
+		<br/> 
+		<p:commandButton id="btnGuardarOdontograma"
+			style="font-size:14px; font-weight:normal !important"
+			action="#{atencionOdontologica.guardarOdontograma()}"
+			process=":formAtencion" update=":formAtencion" value="Guardar Odontograma" />
+		<p:spacer width="10" />
+		<p:commandButton id="btnStepTo3"
+			style="font-size:14px; font-weight:normal !important"
+			action="#{atencionOdontologica.setVistaActual(3)}"
+			process="@this" update=":formAtencion"
+			value="Siguiente" />
+ </div>
+
+			
+			
+					
+			
+
+</ui:define>
+</ui:composition>

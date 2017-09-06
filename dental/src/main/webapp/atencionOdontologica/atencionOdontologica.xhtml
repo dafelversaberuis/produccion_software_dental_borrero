@@ -1,0 +1,1536 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/plantillas/principal.xhtml">
+	<ui:define name="body">
+		<style type="text/css">
+.ui-tabs.ui-tabs-left>.ui-tabs-nav {
+	width: 20%;
+}
+
+.ui-tabs.ui-tabs-top>.ui-tabs-nav li {
+	height: 40px;
+}
+
+.ui-steps .ui-steps-item {
+	width: 20%;
+}
+
+.ui-panelgrid-cell {
+	border-width: 1px;
+	border-style: solid;
+	border-color: inherit;
+	padding: 4px 4px 0px !important;
+}
+
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 30px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+	padding: .6em 1em;
+	width: 100%;
+}
+
+ui-fieldset-content {
+	padding: 10px;
+}
+
+.ui-inputfield {
+	
+}
+
+.inputTexto {
+	font-size: 13px !important;
+}
+
+.textoNegrita {
+	font-weight: bold !important;
+	font-size: 14px !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: .3em 0em;
+}
+
+.botonOdontograma {
+	background-origin: content-box;
+	background-image: url('../imagenes/dientes/dientesano.png');
+	background-size: cover;
+	float: right;
+	background-repeat: no-repeat;
+	width: 60px;
+	height: 60px;
+	border: 0;
+	background-color: transparent"
+}
+
+.ui-inputtextarea {
+	height: 100px;
+}
+
+.ui-inputnumber {
+	text-align: right;
+}
+
+.columnaExtremo {
+	width: 30%;
+	vertical-align: middle !important;
+	text-align: center !important;
+}
+
+.columnaCentro {
+	width: 40%;
+	vertical-align: middle !important;
+	text-align: center !important;
+}
+</style>
+		<h:form id="formAtencion">
+			<f:metadata>
+				<f:viewParam id="idPaciente" name="idPaciente"
+					value="#{atencionOdontologica.idPaciente}" />
+				<f:event type="preRenderView"
+					listener="#{atencionOdontologica.buscarPaciente()}" />
+			</f:metadata>
+
+			<p:growl id="messages" showDetail="true" globalOnly="true" />
+
+			<div class="row">
+				<br />
+				<div class="row x_title">
+					<div class="col-md-6">
+						<h3>
+							<p:outputLabel value="Módulo atención:"
+								styleClass="tituloPrincipal" />
+							<p:spacer width="2" />
+							<p:outputLabel value="Atención Odontológica"
+								styleClass="tituloPrincipal" />
+						</h3>
+					</div>
+				</div>
+				<div align="center">
+					<p:outputPanel id="pnlDetalleAtencion">
+						<div align="left">
+
+							<p:tabView id="tabAtencion" titleStyle="font-size:12px"
+								activeIndex="#{atencionOdontologica.vistaActual}">
+								<p:tab title="Datos personales paciente" id="pnlDatosUsuario"
+									titleStyle="font-size:16px">
+
+									<div align="center">
+										<p:panelGrid styleClass="ui-panelgrid-blank  " columns="1"
+											rendered="#{!atencionOdontologica.usuario.modoEdicion}"
+											cellpadding="0" cellspacing="0" style="width:100%">
+
+
+											<div class="ui-message-warn ui-corner-all" align="center">
+												CONSULTA DEL USUARIO ><span class="ui-warn-error-detail"
+													style="font-size: 18px; width: 100%; font-weight: bold;">
+													Para buscar un paciente, digite su N° de Identificación</span>
+											</div>
+
+										</p:panelGrid>
+									</div>
+
+									<p:panelGrid style="width:100%"
+										styleClass="ui-panelgrid-blank ">
+										<p:row>
+											<p:column>
+												<p:outputLabel for="txtDocumento" value="# Documento :" />
+											</p:column>
+											<p:column>
+												<p:inputNumber id="txtDocumento"
+													value="#{atencionOdontologica.usuario.idDocumento}"
+													size="12" thousandSeparator="." decimalPlaces="0"
+													emptyValue="empty" style="width:50px; " required="true">
+													<p:ajax event="blur"
+														listener="#{atencionOdontologica.consultarUsuario()}"
+														process="@this"
+														update=":formAtencion,:formAtencion:messages" />
+													<p:focus context="txtNombre" />
+												</p:inputNumber>
+												<p:message for="txtDocumento" />
+											</p:column>
+											<p:column>
+												<p:outputLabel for="calFechaNacimiento"
+													value="Fecha nacimiento" styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<h:panelGrid columns="3" width="100%">
+													<p:calendar id="calFechaNacimiento"
+														label="Fecha nacimiento"
+														value="#{atencionOdontologica.usuario.fechaNacimiento}"
+														size="10" style="width:70px; " mask="true"
+														pages="#{mensaje.calendario_paginado}"
+														pattern="#{mensaje.calendario_formatoFecha}"
+														locale="#{mensaje.calendario_locale}"
+														navigator="#{mensaje.calendario_isNavegacion}"
+														yearRange="c-70:c">
+														<p:ajax event="dateSelect" update="edadTexto" />
+													</p:calendar>
+													<p:outputLabel id="edadTexto"
+														value="#{atencionOdontologica.usuario.edadTexto} " />
+													<p:commandButton id="btnFoto"
+														style="background-origin: content-box; background-image: url('#{atencionOdontologica.usuario.tNombreFoto}');
+										background-size: cover;float:right; background-repeat:no-repeat; width:100px; height:100px;border:0; background-color:transparent"
+														action="#{atencionOdontologica.asignarFotoUsuario(true)}"
+														value="" update=":formAtencion:panelVerFoto"
+														process=":formAtencion:tabAtencion:btnFoto" />
+													<p:tooltip for="btnFoto" value="Cambiar Foto del usuario"
+														trackMouse="true" />
+
+												</h:panelGrid>
+											</p:column>
+											<p:column>
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:outputLabel for="txtNombre" value="Nombres"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:inputText id="txtNombre"
+													value="#{atencionOdontologica.usuario.nombres}"
+													required="true" label="Nombres"
+													style="min-width:200px;max-width:400px; font-size:14px; " />
+												<p:message for="txtNombre" />
+											</p:column>
+
+											<p:column>
+												<p:outputLabel for="txtApellido" value="Apellidos"
+													style="font-weight:bold; font-size:14px" />
+											</p:column>
+											<p:column>
+												<p:inputText id="txtApellido"
+													value="#{atencionOdontologica.usuario.apellidos}"
+													required="true" label="Apellidos"
+													style="min-width:200px;max-width:400px; font-size:14px; " />
+												<p:message for="txtApellido" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:outputLabel for="lstEstadoCivil" value="Estado civil"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:selectOneMenu id="lstEstadoCivil" required="true"
+													style="width:100%; font-size:14px;"
+													value="#{atencionOdontologica.usuario.estadoCivil}"
+													label="Estado civil">
+													<f:selectItem itemValue="S" itemLabel="Soltero/a" />
+													<f:selectItem itemValue="C" itemLabel="Casado/a" />
+													<f:selectItem itemValue="V" itemLabel="Viudo/a" />
+													<f:selectItem itemValue="D" itemLabel="Divorciado/a" />
+												</p:selectOneMenu>
+											</p:column>
+											<p:column>
+												<p:outputLabel for="lstGenero" value="Género"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:selectOneRadio id="lstGenero" required="true"
+													style="width:100%; font-size:14px; "
+													value="#{atencionOdontologica.usuario.genero}"
+													label="Genero">
+													<f:selectItem itemValue="M" itemLabel="Masculino" />
+													<f:selectItem itemValue="F" itemLabel="Femenino" />
+												</p:selectOneRadio>
+											</p:column>
+										</p:row>
+
+										<p:row>
+											<p:column>
+												<p:outputLabel for="txtTelefono" value="Teléfono"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:inputNumber id="txtTelefono"
+													value="#{atencionOdontologica.usuario.telefono}" size="12"
+													decimalPlaces="0" thousandSeparator="" emptyValue="empty"
+													style="width:50px; " />
+											</p:column>
+											<p:column>
+												<p:outputLabel for="txtCorreo" value="Correo"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:inputText id="txtCorreo"
+													value="#{atencionOdontologica.usuario.correoElectronico}"
+													label="Correo"
+													style="min-width:200px;max-width:400px; font-size:14px; " />
+												<p:message for="txtCorreo" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:outputLabel for="txtDireccion" value="Dirección"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column colspan="3">
+												<p:inputText id="txtDireccion"
+													value="#{atencionOdontologica.usuario.direccion}"
+													label="Dirección" style="min-width:200px;font-size:14px; " />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column>
+												<p:outputLabel for="txtOcupacion" value="Ocupación"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:inputText id="txtOcupacion"
+													value="#{atencionOdontologica.usuario.ocupacion}"
+													label="Ocupación" style="min-width:200px;font-size:14px; " />
+											</p:column>
+											<p:column>
+												<p:outputLabel for="txtAcudiente" value="Acudiente"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:inputText id="txtAcudiente"
+													value="#{atencionOdontologica.usuario.acudiente}"
+													label="Acudiente"
+													style="min-width:200px;max-width:400px; font-size:14px; " />
+											</p:column>
+										</p:row>
+										<p:row rendered="#{atencionOdontologica.usuario.modoEdicion}">
+											<p:column>
+												<p:outputLabel value="Documentos adjuntos del paciente"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:commandButton id="btnDocumentosUsuario"
+													action="#{atencionOdontologica.cargarDocumentoUsuario()}"
+													value="Cargar/Ver Documentos"
+													update=":formDocumentoUsuario:panelVerDocumento"
+													process=":formAtencion:tabAtencion:btnDocumentosUsuario" />
+												<p:tooltip for="btnDocumentosUsuario"
+													value="Cargar/Visualizar Documentos adjuntos del paciente"
+													trackMouse="true" />
+											</p:column>
+											<p:column></p:column>
+											<p:column></p:column>
+										</p:row>
+
+									</p:panelGrid>
+									<br />
+									<p:outputPanel id="consultasAnteriores">
+										<p:dataTable id="dtbConsultasUsuario"
+											value="#{atencionOdontologica.usuario.consultas}" var="c"
+											paginator="true" paginatorPosition="bottom" rows="5"
+											rendered="#{atencionOdontologica.usuario!=null and atencionOdontologica.usuario.consultas!=null and atencionOdontologica.usuario.consultas.size()>0}">
+											<f:facet name="header">
+												<h:outputText value="Resumen de consultas del Usuario" />
+											</f:facet>
+											<p:column headerText="Fecha" width="50px"
+												sortBy="#{c.fechaConsulta}">
+												<h:outputText
+													value="#{atencionOdontologica.getFechaHora(c.fechaConsulta)}" />
+											</p:column>
+											<p:column headerText="Motivo Consulta">
+												<h:outputText value="#{c.motivoConsulta}" />
+											</p:column>
+											<p:column headerText="Historia Enfermedad">
+												<h:outputText value="#{c.historiaEnfermedadActual}" />
+											</p:column>
+											<p:column headerText="Observaciones">
+												<h:outputText value="#{c.observaciones}" />
+											</p:column>
+											<p:column headerText="Tipo">
+												<h:outputText value="Escaneada"
+													rendered="#{c.consultaEscaneada}" />
+
+												<h:outputText value="(Consulta editable)"
+													rendered="#{!c.modoConsulta}"
+													style="color:green; font-weight:bold" />
+
+												<h:outputText value="(Consulta cerrada)"
+													rendered="#{c.modoConsulta}" />
+
+
+											</p:column>
+											<p:column headerText="acciones">
+												<p:commandButton id="btnEditarConsulta"
+													style="#{mensaje.iconoEditar}"
+													title="Edita la consulta seleccionada"
+													action="#{atencionOdontologica.cargarConsulta(c)}" value=""
+													update=":formAtencion:tabAtencion"
+													process=":formAtencion:tabAtencion:dtbConsultasUsuario"
+													rendered="#{!c.modoConsulta}" />
+												<p:commandButton id="btnVerConsulta"
+													style="#{mensaje.iconoDetalle}"
+													title="Ver la consulta seleccionada"
+													action="#{ atencionOdontologica.cargarConsulta(c)}"
+													value="" update=":formAtencion:tabAtencion"
+													process=":formAtencion:tabAtencion:dtbConsultasUsuario"
+													rendered="#{c.modoConsulta}" />
+												<p:commandButton id="btnDocumentosConsultaView"
+													style="#{mensaje.iconoDocumento}"
+													action="#{atencionOdontologica.cargarDocumentoConsulta(c)}"
+													title="Cargar Documentos" value=""
+													update=":formDocumentoConsulta:panelVerDocumentoConsulta"
+													process="@this" />
+												<p:tooltip for="btnEditarConsulta"
+													value="Editar la consulta seleccionada" trackMouse="true" />
+												<p:tooltip for="btnVerConsulta"
+													value="Visualizar la consulta seleccionada"
+													trackMouse="true" />
+												<p:tooltip for="btnDocumentosConsultaView"
+													value="Cargar/Visualizar Documentos adjuntos de la consulta"
+													trackMouse="true" />
+
+											</p:column>
+										</p:dataTable>
+									</p:outputPanel>
+									<br />
+									<div align="center">
+										<p:commandButton id="btnGuardar"
+											style="font-size:14px; font-weight:bold !important"
+											action="#{atencionOdontologica.guardarAtencionOdontologica()}"
+											process="pnlDatosUsuario"
+											update=":formAtencion,:formAtencion:panelUsuarioCompleto"
+											value="Guardar datos paciente y continuar" />
+										<p:spacer width="10" />
+										<p:commandButton id="btnStep1"
+											style="font-size:14px; font-weight:normal !important"
+											rendered="#{atencionOdontologica.usuario.modoEdicion and 1==2}"
+											action="#{atencionOdontologica.setVistaActual(1)}"
+											process="@this" update=":formAtencion" value="Siguiente" />
+									</div>
+
+								</p:tab>
+								<p:tab id="pnlExamen" titleStyle="font-size:16px"
+									disabled="#{!atencionOdontologica.usuario.modoEdicion}"
+									title="Información Consulta (#{consultarFuncionesAPI.getFechaHora2(atencionOdontologica.consulta.fechaConsulta)})">
+									<p:panelGrid styleClass="ui-panelgrid-blank  " columns="2"
+										cellpadding="0" cellspacing="0">
+										<h:outputText value="PACIENTE:"
+											style="font-weight:bold; color:green; font-size:18px" />
+
+										<h:outputText
+											value="#{atencionOdontologica.usuario.nombres} #{atencionOdontologica.usuario.apellidos}"
+											style="font-weight:normal; font-size:18px" />
+
+									</p:panelGrid>
+
+
+									<div align="center">
+
+										<p:panelGrid styleClass="ui-panelgrid-blank  " columns="1"
+											rendered="#{atencionOdontologica.consulta.modoConsulta}"
+											style="width:100%" cellpadding="0" cellspacing="0">
+											<div class="ui-message-warn ui-corner-all" align="center">
+												MODO VISUALIZACIÓN > <span class="ui-message-warn-detail"
+													style="font-size: 18px; width: 100%; font-weight: bold;">
+													En este modo no podrá realizar cambios en la consulta</span>
+											</div>
+
+
+										</p:panelGrid>
+
+									</div>
+									<br />
+									<p:panelGrid style="width:100%"
+										styleClass="ui-panelgrid-blank  ">
+										<p:row>
+											<p:column>
+												<p:outputLabel value="¿Corresponde a consulta escaneada?"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:selectBooleanButton id="btnEscanear"
+													value="#{atencionOdontologica.consulta.consultaEscaneada}"
+													onLabel="SI" offLabel="NO"
+													disabled="#{atencionOdontologica.consulta.modoEdicion}"
+													onIcon="ui-icon-check" offIcon="ui-icon-close"
+													style="width:80px">
+													<p:ajax update=":formAtencion:tabAtencion"
+														listener="#{atencionOdontologica.setVistaActual(1)}" />
+												</p:selectBooleanButton>
+
+												<p:tooltip for="btnEscanear"
+													value="#{mensaje.ayudaEscanearConsulta}" trackMouse="true" />
+											</p:column>
+
+											<p:column>
+
+												<p:outputLabel value="Documentos Adjuntos de la consulta"
+													styleClass="textoNegrita" />
+											</p:column>
+											<p:column>
+												<p:commandButton id="btnDocumentosConsulta"
+													action="#{atencionOdontologica.cargarDocumentoConsulta(atencionOdontologica.consulta)}"
+													value="Cargar/Ver Documentos de la consulta"
+													update=":formDocumentoConsulta:panelVerDocumentoConsulta"
+													process=":formAtencion:tabAtencion:btnDocumentosConsulta" />
+												<p:tooltip for="btnDocumentosConsulta"
+													value="Cargar/Visualizar Documentos adjuntos de la consulta "
+													trackMouse="true" />
+												<p:spacer width="50"
+													rendered="#{!atencionOdontologica.consulta.modoEdicion}" />
+											</p:column>
+
+										</p:row>
+										<p:row>
+											<p:column colspan="2">
+												<p:outputLabel for="txtMotivoConsulta"
+													value="Motivo de consulta:" styleClass="textoNegrita" />
+											</p:column>
+											<p:column colspan="2">
+												<p:outputLabel for="txtHistoriaEnfermedadActual"
+													value="Historia enfermedad actual:"
+													styleClass="textoNegrita" />
+											</p:column>
+										</p:row>
+										<p:row>
+											<p:column colspan="2">
+												<p:inputTextarea
+													value="#{atencionOdontologica.consulta.motivoConsulta}"
+													required="true" id="txtMotivoConsulta"
+													label="Motivo de consulta" maxlength="250" size="250"
+													tabindex="1"
+													disabled="#{atencionOdontologica.consulta.modoConsulta}" />
+											</p:column>
+											<p:column colspan="2">
+												<p:inputTextarea
+													value="#{atencionOdontologica.consulta.historiaEnfermedadActual}"
+													required="true" id="txtHistoriaEnfermedadActual"
+													label="Historia enfermedad actual" rows="7" cols="33"
+													style="min-width:200px;font-size:14px; height:80px!important"
+													disabled="#{atencionOdontologica.consulta.modoConsulta}" />
+											</p:column>
+										</p:row>
+
+									</p:panelGrid>
+									<p:outputPanel id="pnlInfoExamen"
+										rendered="#{!atencionOdontologica.consulta.consultaEscaneada}">
+										<p:panelGrid style="width:100%"
+											styleClass="ui-panelgrid-blank  ">
+											<p:row>
+												<p:column colspan="3">
+													<!-- HIGIENE ORAL -->
+													<p:dataGrid
+														value="#{atencionOdontologica.consulta.higienesOrales}"
+														columns="2" rows="12" var="higiene"
+														paginatorAlwaysVisible="false" paginator="true"
+														paginatorPosition="bottom"
+														styleClass="ui-datagrid-no-border" reflow="true">
+														<f:facet name="header">Higiene oral</f:facet>
+														<h:panelGrid columns="2" cellpadding="10">
+															<p:outputLabel value="#{higiene.higieneOral.nombre}:"
+																style="font-weight:normal;min-width:100px;max-width:150px;" />
+															<p:selectBooleanButton value="#{higiene.valor}"
+																onLabel="SI" offLabel="NO"
+																disabled="#{atencionOdontologica.consulta.modoConsulta}"
+																onIcon="ui-icon-check" offIcon="ui-icon-close"
+																style="width:80px" />
+														</h:panelGrid>
+													</p:dataGrid>
+													<!-- FIN HIGIENE ORAL -->
+													<br />
+													<!-- HABITOS ORALES -->
+													<p:dataGrid
+														value="#{atencionOdontologica.consulta.habitosOrales}"
+														columns="2" rows="5" var="habito"
+														paginatorAlwaysVisible="false" paginator="true"
+														paginatorPosition="bottom"
+														styleClass="ui-datagrid-no-border" reflow="true">
+														<f:facet name="header">Hábitos Orales</f:facet>
+														<h:panelGrid columns="2" cellpadding="10">
+															<p:outputLabel value="#{habito.habitoOral.nombre}:"
+																style="font-weight:normal;min-width:100px;max-width:150px;" />
+															<p:selectBooleanButton value="#{habito.valor}"
+																onLabel="SI" offLabel="NO"
+																disabled="#{atencionOdontologica.consulta.modoConsulta}"
+																onIcon="ui-icon-check" offIcon="ui-icon-close"
+																style="width:80px" />
+														</h:panelGrid>
+													</p:dataGrid>
+													<!-- FIN HABITOS ORALES -->
+													<br />
+													<p:outputLabel for="txtObservaciones"
+														value="Observaciones :" />
+													<p:inputTextarea
+														value="#{atencionOdontologica.consulta.observaciones}"
+														required="true" id="txtObservaciones"
+														label="Observaciones"
+														disabled="#{atencionOdontologica.consulta.modoConsulta}" />
+												</p:column>
+												<p:column colspan="3">
+													<!-- ANAMNESIS -->
+													<p:dataGrid
+														value="#{atencionOdontologica.consulta.anamnesis}"
+														columns="2" rows="18" var="anamnesis"
+														paginatorAlwaysVisible="false" scrollable="true"
+														scrollHeight="300" paginator="true"
+														paginatorPosition="bottom"
+														styleClass="ui-datagrid-no-border" reflow="true">
+														<f:facet name="header">Anamnesis</f:facet>
+														<h:panelGrid columns="2" cellpadding="10">
+															<p:outputLabel value="#{anamnesis.anamnesis.nombre}:"
+																style="font-weight:normal;width:150px;" />
+															<p:selectBooleanButton value="#{anamnesis.valor}"
+																onLabel="SI" offLabel="NO"
+																disabled="#{atencionOdontologica.consulta.modoConsulta}"
+																onIcon="ui-icon-check" offIcon="ui-icon-close"
+																style="width:70px" />
+														</h:panelGrid>
+													</p:dataGrid>
+													<!-- FIN ANAMNESIS -->
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+										<br />
+										<!-- EXAMEN CLÍNICO -->
+										<p:dataGrid
+											value="#{atencionOdontologica.consulta.examenesClinicos}"
+											columns="3" rows="15" var="examen"
+											paginatorAlwaysVisible="false" scrollable="true"
+											scrollHeight="300" paginator="true"
+											paginatorPosition="bottom" styleClass="ui-datagrid-no-border"
+											reflow="true">
+											<f:facet name="header">Exámen clinico</f:facet>
+											<h:panelGrid columns="2" cellpadding="10">
+												<p:outputLabel value="#{examen.examenClinico.nombre} :"
+													style="font-weight:normal;min-width:185px;max-width:220px;" />
+												<p:selectBooleanButton value="#{examen.valor}"
+													onLabel="Normal" offLabel="Anormal"
+													disabled="#{atencionOdontologica.consulta.modoConsulta}"
+													style="width:85px" />
+											</h:panelGrid>
+										</p:dataGrid>
+										<!-- FIN EXAMEN CLÍNICO -->
+									</p:outputPanel>
+									<br />
+									<div align="center">
+										<p:commandButton id="btnBackTo1"
+											rendered="#{atencionOdontologica.consulta.modoConsulta}"
+											style="font-size:14px; font-weight:normal !important"
+											action="#{atencionOdontologica.setVistaActual(0)}"
+											process="@this" update=":formAtencion"
+											value="Anterior (Ver datos personales del paciente)" />
+										<p:spacer width="10" />
+										<p:commandButton id="btnGuardarConsulta"
+											style="font-size:14px; font-weight:normal !important"
+											action="#{atencionOdontologica.guardarConsulta(false)}"
+											disabled="#{atencionOdontologica.consulta.modoConsulta}"
+											process=":formAtencion"
+											update=":formAtencion,:formAtencion:panelConsultaCompleta, :formAtencion:tabAtencion:consultasAnteriores"
+											value="Guardar cambios en la consulta" />
+										<p:spacer width="10" />
+										<p:commandButton id="btnStepTo2"
+											rendered="#{atencionOdontologica.consulta.modoConsulta and !atencionOdontologica.consulta.consultaEscaneada}"
+											style="font-size:14px; font-weight:normal !important"
+											action="#{atencionOdontologica.setVistaActual(2)}"
+											process=":formAtencion" update=":formAtencion"
+											value="Siguiente (Ver odontograma de la consulta)" />
+										<p:commandButton id="btnStep1To2"
+											rendered="#{atencionOdontologica.consulta.modoEdicion and atencionOdontologica.consulta.consultaEscaneada}"
+											style="font-size:14px; font-weight:normal !important"
+											action="#{atencionOdontologica.setVistaActual(3)}"
+											process=":formAtencion" update=":formAtencion"
+											value="Siguiente (Ver tratamientos paciente)" />
+									</div>
+								</p:tab>
+								<p:tab id="pnlOdontograma" titleStyle="font-size:16px"
+									disabled="#{!atencionOdontologica.consulta.modoEdicion or atencionOdontologica.consulta.consultaEscaneada}"
+									title="Odontograma(De la consulta: #{consultarFuncionesAPI.getFechaHora2(atencionOdontologica.consulta.fechaConsulta)})">
+
+									<p:panelGrid styleClass="ui-panelgrid-blank  " columns="2"
+										cellpadding="0" cellspacing="0">
+										<h:outputText value="PACIENTE:"
+											style="font-weight:bold; color:green; font-size:18px" />
+
+										<h:outputText rendered="#{atencionOdontologica.usuario!=null}"
+											value="#{atencionOdontologica.usuario.nombres} #{atencionOdontologica.usuario.apellidos}"
+											style="font-weight:normal; font-size:18px" />
+
+									</p:panelGrid>
+									<div align="center">
+
+										<p:panelGrid styleClass="ui-panelgrid-blank  " columns="1"
+											rendered="#{atencionOdontologica.consulta.modoConsulta}"
+											style="width:100%" cellpadding="0" cellspacing="0">
+											<div class="ui-message-warn ui-corner-all" align="center">
+												MODO VISUALIZACIÓN > <span class="ui-message-warn-detail"
+													style="font-size: 18px; width: 100%; font-weight: bold;">
+													En este modo no podrá realizar cambios en el odontograma de
+													la consulta</span>
+											</div>
+
+
+										</p:panelGrid>
+
+										<p:panelGrid styleClass="ui-panelgrid-blank  " columns="1"
+											rendered="#{!atencionOdontologica.consulta.modoConsulta and atencionOdontologica.getCadenaAnamnesisAlerta()!=''}"
+											style="width:100%" cellpadding="0" cellspacing="0">
+											<div class="ui-message-fatal ui-corner-all" align="center">
+												TENGA EN CUENTA ESTA ANAMNESIS > <span
+													class="ui-message-fatal-detail"
+													style="font-size: 18px; width: 100%; font-weight: bold;">
+													#{atencionOdontologica.getCadenaAnamnesisAlerta()}</span>
+											</div>
+											<p:effect type="pulsate" event="click" delay="500" />
+											<p:effect type="pulsate" event="start" delay="500" />
+											<p:effect type="pulsate" event="focus" delay="500" />
+											<p:effect type="pulsate" event="mouseover" delay="500" />
+
+
+										</p:panelGrid>
+
+
+									</div>
+									<br />
+									<div align="center">
+										<p:outputPanel
+											rendered="#{!atencionOdontologica.consulta.consultaEscaneada}">
+
+											<h:panelGrid columns="17" style="width:1000px;">
+												<h:panelGrid style="text-align: center;" id="diente18">	
+						  18<p:commandButton id="btn18"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,8)}"
+														action="#{atencionOdontologica.cargarDiente(1,8)}"
+														process="pnlOdontograma" value=""
+														update=":formDiente,txtObservacionOdontograma,btn18" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  17<p:commandButton id="btn17"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,7)}"
+														action="#{atencionOdontologica.cargarDiente(1,7)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn17" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  16<p:commandButton id="btn16"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,6)}"
+														action="#{atencionOdontologica.cargarDiente(1,6)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn16" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  15<p:commandButton id="btn15"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,5)}"
+														action="#{atencionOdontologica.cargarDiente(1,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn15" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  14<p:commandButton id="btn14"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,4)}"
+														action="#{atencionOdontologica.cargarDiente(1,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn14" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  13<p:commandButton id="btn13"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,3)}"
+														action="#{atencionOdontologica.cargarDiente(1,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn13" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  12<p:commandButton id="btn12"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,2)}"
+														action="#{atencionOdontologica.cargarDiente(1,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn12" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  11<p:commandButton id="btn11"
+														style="#{atencionOdontologica.cargarImagenOdontograma(1,1)}"
+														action="#{atencionOdontologica.cargarDiente(1,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn11" />
+												</h:panelGrid>
+
+												<p:spacer />
+
+												<h:panelGrid style="text-align: center;">	
+						  21<p:commandButton id="btn21"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,1)}"
+														action="#{atencionOdontologica.cargarDiente(2,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn21" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  22<p:commandButton id="btn22"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,2)}"
+														action="#{atencionOdontologica.cargarDiente(2,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn22" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  23<p:commandButton id="btn23"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,3)}"
+														action="#{atencionOdontologica.cargarDiente(2,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn23" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  24<p:commandButton id="btn24"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,4)}"
+														action="#{atencionOdontologica.cargarDiente(2,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn24" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  25<p:commandButton id="btn25"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,5)}"
+														action="#{atencionOdontologica.cargarDiente(2,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn25" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  26<p:commandButton id="btn26"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,6)}"
+														action="#{atencionOdontologica.cargarDiente(2,6)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn26" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  27<p:commandButton id="btn27"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,7)}"
+														action="#{atencionOdontologica.cargarDiente(2,7)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn27" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  28<p:commandButton id="btn28"
+														style="#{atencionOdontologica.cargarImagenOdontograma(2,8)}"
+														action="#{atencionOdontologica.cargarDiente(2,8)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn28" />
+												</h:panelGrid>
+
+
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn48"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,8)}"
+														action="#{atencionOdontologica.cargarDiente(4,8)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn48" />48						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn47"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,7)}"
+														action="#{atencionOdontologica.cargarDiente(4,7)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn47" />47						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn46"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,6)}"
+														action="#{atencionOdontologica.cargarDiente(4,6)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn46" />46						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn45"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,5)}"
+														action="#{atencionOdontologica.cargarDiente(4,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn45" />	45					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn44"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,4)}"
+														action="#{atencionOdontologica.cargarDiente(4,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn44" />44						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn43"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,3)}"
+														action="#{atencionOdontologica.cargarDiente(4,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn43" />	43					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn42"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,2)}"
+														action="#{atencionOdontologica.cargarDiente(4,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn42" />	42					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn41"
+														style="#{atencionOdontologica.cargarImagenOdontograma(4,1)}"
+														action="#{atencionOdontologica.cargarDiente(4,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn41" />	41					 
+						</h:panelGrid>
+
+												<p:spacer />
+
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn31"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,1)}"
+														action="#{atencionOdontologica.cargarDiente(3,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn31" />31						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn32"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,2)}"
+														action="#{atencionOdontologica.cargarDiente(3,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn32" />	32					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn33"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,3)}"
+														action="#{atencionOdontologica.cargarDiente(3,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn33" />	33					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn34"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,4)}"
+														action="#{atencionOdontologica.cargarDiente(3,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn34" />34						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn35"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,5)}"
+														action="#{atencionOdontologica.cargarDiente(3,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn35" />35						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn36"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,6)}"
+														action="#{atencionOdontologica.cargarDiente(3,6)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn36" />36						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn37"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,7)}"
+														action="#{atencionOdontologica.cargarDiente(3,7)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn37" />37						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn38"
+														style="#{atencionOdontologica.cargarImagenOdontograma(3,8)}"
+														action="#{atencionOdontologica.cargarDiente(3,8)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn38" />38						 
+						</h:panelGrid>
+
+
+												<p:spacer />
+												<p:spacer />
+												<p:spacer />
+												<h:panelGrid style="text-align: center;">	
+						  55<p:commandButton id="btn55"
+														style="#{atencionOdontologica.cargarImagenOdontograma(5,5)}"
+														action="#{atencionOdontologica.cargarDiente(5,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn55" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  54<p:commandButton id="btn54"
+														style="#{atencionOdontologica.cargarImagenOdontograma(5,4)}"
+														action="#{atencionOdontologica.cargarDiente(5,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn54" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  53<p:commandButton id="btn53"
+														style="#{atencionOdontologica.cargarImagenOdontograma(5,3)}"
+														action="#{atencionOdontologica.cargarDiente(5,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn53" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  52<p:commandButton id="btn52"
+														style="#{atencionOdontologica.cargarImagenOdontograma(5,2)}"
+														action="#{atencionOdontologica.cargarDiente(5,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn52" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  51<p:commandButton id="btn51"
+														style="#{atencionOdontologica.cargarImagenOdontograma(5,1)}"
+														action="#{atencionOdontologica.cargarDiente(5,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn51" />
+												</h:panelGrid>
+
+												<p:spacer />
+
+												<h:panelGrid style="text-align: center;">	
+						  61<p:commandButton id="btn61"
+														style="#{atencionOdontologica.cargarImagenOdontograma(6,1)}"
+														action="#{atencionOdontologica.cargarDiente(6,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn61" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  62<p:commandButton id="btn62"
+														style="#{atencionOdontologica.cargarImagenOdontograma(6,2)}"
+														action="#{atencionOdontologica.cargarDiente(6,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn62" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  63<p:commandButton id="btn63"
+														style="#{atencionOdontologica.cargarImagenOdontograma(6,3)}"
+														action="#{atencionOdontologica.cargarDiente(6,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn63" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  64<p:commandButton id="btn64"
+														style="#{atencionOdontologica.cargarImagenOdontograma(6,4)}"
+														action="#{atencionOdontologica.cargarDiente(6,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn64" />
+												</h:panelGrid>
+												<h:panelGrid style="text-align: center;">	
+						  65<p:commandButton id="btn65"
+														style="#{atencionOdontologica.cargarImagenOdontograma(6,5)}"
+														action="#{atencionOdontologica.cargarDiente(6,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn65" />
+												</h:panelGrid>
+												<p:spacer />
+												<p:spacer />
+												<p:spacer />
+
+
+												<p:spacer />
+												<p:spacer />
+												<p:spacer />
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn85"
+														style="#{atencionOdontologica.cargarImagenOdontograma(8,5)}"
+														action="#{atencionOdontologica.cargarDiente(8,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn85" />	85					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn84"
+														style="#{atencionOdontologica.cargarImagenOdontograma(8,4)}"
+														action="#{atencionOdontologica.cargarDiente(8,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn84" />84						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn83"
+														style="#{atencionOdontologica.cargarImagenOdontograma(8,3)}"
+														action="#{atencionOdontologica.cargarDiente(8,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn83" />	83					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn82"
+														style="#{atencionOdontologica.cargarImagenOdontograma(8,2)}"
+														action="#{atencionOdontologica.cargarDiente(8,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn82" />	82					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn81"
+														style="#{atencionOdontologica.cargarImagenOdontograma(8,1)}"
+														action="#{atencionOdontologica.cargarDiente(8,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn81" />	81					 
+						</h:panelGrid>
+
+												<p:spacer />
+
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn71"
+														style="#{atencionOdontologica.cargarImagenOdontograma(7,1)}"
+														action="#{atencionOdontologica.cargarDiente(7,1)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn71" />71						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn72"
+														style="#{atencionOdontologica.cargarImagenOdontograma(7,2)}"
+														action="#{atencionOdontologica.cargarDiente(7,2)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn72" />	72					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn73"
+														style="#{atencionOdontologica.cargarImagenOdontograma(7,3)}"
+														action="#{atencionOdontologica.cargarDiente(7,3)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn73" />	73					 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn74"
+														style="#{atencionOdontologica.cargarImagenOdontograma(7,4)}"
+														action="#{atencionOdontologica.cargarDiente(7,4)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn74" />74						 
+						</h:panelGrid>
+												<h:panelGrid style="text-align: center;">
+													<p:commandButton id="btn75"
+														style="#{atencionOdontologica.cargarImagenOdontograma(7,5)}"
+														action="#{atencionOdontologica.cargarDiente(7,5)}"
+														value="" process="pnlOdontograma"
+														update=":formDiente,txtObservacionOdontograma,btn75" />75						 
+						</h:panelGrid>
+												<p:spacer />
+												<p:spacer />
+												<p:spacer />
+
+											</h:panelGrid>
+											<br />
+											<p:panelGrid style="width:100%"
+												styleClass="ui-panelgrid-blank  ">
+												<p:row>
+													<p:column>
+														<p:outputLabel for="txtObservacionOdontograma"
+															value="Observaciones Automáticas:"
+															styleClass="textoNegrita" />
+														<br />
+														<p:textEditor widgetVar="txtObservacionOdontograma"
+															value="#{atencionOdontologica.consulta.observacionAutomatica}"
+															id="txtObservacionOdontograma" height="250"
+															style="width:90%;margin-bottom:10px">
+															<f:facet name="toolbar">
+																<span class="ql-formats">
+																	<button class="ql-bold"></button>
+																	<button class="ql-italic"></button>
+																	<button class="ql-underline"></button>
+																	<button class="ql-strike"></button>
+																</span>
+															</f:facet>
+														</p:textEditor>
+														<p:outputLabel for="txtObservacionOdontograma2"
+															value="Otras Observaciones: " styleClass="textoNegrita" />
+														<br />
+														<p:inputTextarea style="width:90%;margin-bottom:10px"
+															id="txtObservacionOdontograma2"
+															value="#{atencionOdontologica.consulta.observacionesOdontograma}"></p:inputTextarea>
+													</p:column>
+													<p:column>
+														<!-- ESTADOS DEL DIENTE -->
+														<p:dataGrid value="#{atencionOdontologica.estadosDiente}"
+															columns="2" rows="12" var="e"
+															paginatorAlwaysVisible="false" paginator="true"
+															paginatorPosition="bottom"
+															styleClass="ui-datagrid-no-border" reflow="true">
+															<f:facet name="header">Convenciones</f:facet>
+															<h:panelGrid columns="2" cellpadding="10">
+																<p:row>
+																	<p:column style="vertical-align: middle;">
+																		<p:outputLabel value="#{e.nombre}:"
+																			style="font-weight:normal;min-width:150px;max-width:150px;" />
+																	</p:column>
+																	<p:column>
+																		<p:commandButton style="#{e.zonaTotalNombreFoto}"
+																			value="" />
+																	</p:column>
+																</p:row>
+
+															</h:panelGrid>
+															<p:separator />
+														</p:dataGrid>
+														<!-- FIN ESTADOS DEL DIENTE -->
+														<br />
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column colspan="3" style="width:80%">
+
+													</p:column>
+												</p:row>
+
+											</p:panelGrid>
+
+											<p:commandButton id="btnGuardarOdontograma"
+												rendered="#{!atencionOdontologica.consulta.modoConsulta}"
+												style="font-size:14px; font-weight:normal !important"
+												action="#{atencionOdontologica.guardarOdontograma()}"
+												process=":formAtencion"
+												update=":formAtencion,:formAtencion:panelOdontogramaCompleto"
+												value="Guardar cambios Odontograma" />
+											<p:spacer width="10" />
+											<p:commandButton id="btnStepTo3"
+												rendered="#{atencionOdontologica.consulta.modoConsulta}"
+												style="font-size:14px; font-weight:normal !important"
+												action="#{atencionOdontologica.setVistaActual(3)}"
+												process="@this" update=":formAtencion"
+												value="Siguiente (Ver tratamientos paciente)" />
+										</p:outputPanel>
+									</div>
+								</p:tab>
+								<p:tab id="pnlTratamiento" titleStyle="font-size:16px"
+									disabled="#{!atencionOdontologica.usuario.modoEdicion}"
+									title="Tratamientos del paciente">
+									<p:panelGrid styleClass="ui-panelgrid-blank  " columns="2"
+										cellpadding="0" cellspacing="0">
+										<h:outputText value="PACIENTE:"
+											style="font-weight:bold; color:green; font-size:18px" />
+
+										<h:outputText
+											value="#{atencionOdontologica.usuario.nombres} #{atencionOdontologica.usuario.apellidos}"
+											style="font-weight:normal; font-size:18px" />
+
+									</p:panelGrid>
+									<br />
+
+
+									<p:commandButton
+										style="font-size:14px; font-weight:normal !important"
+										action="#{atencionOdontologica.cargarTratamientoUsuario(null)}"
+										rendered="#{atencionOdontologica.tratamientoUsuario==null}"
+										process="@this" update=":formAtencion:tabAtencion"
+										value="Nuevo Tratamiento"
+										title="Permite crear un nuevo tratamiento" />
+									<!-- Inicio Listado Tratamientos -->
+									<p:dataTable id="dtbTratamientosUsuario"
+										value="#{atencionOdontologica.usuario.tratamientosUsuario}"
+										var="t" emptyMessage="" rows="10"
+										rendered="#{atencionOdontologica.tratamientoUsuario==null and atencionOdontologica.usuario.tratamientosUsuario!=null and atencionOdontologica.usuario.tratamientosUsuario.size()>0  }">
+										<f:facet name="header">
+											<h:outputText value="Tratamientos del Usuario" />
+										</f:facet>
+										<p:column headerText="Fecha Inicio">
+											<h:outputText
+												value="#{consultarFuncionesAPI.getFechaColombia(t.fechaInicio)}" />
+										</p:column>
+										<p:column headerText="Estado" style="text-align:right">
+											<h:outputText value="#{t.estadoTexto}" />
+										</p:column>
+										<p:column headerText="Valor" style="text-align:right">
+											<h:outputText
+												value="#{atencionOdontologica.getMoneda('COP',t.valorTratamiento)}" />
+										</p:column>
+										<p:column headerText="Saldo" style="text-align:right">
+											<h:outputText
+												value="#{atencionOdontologica.getMoneda('COP',t.saldo)}" />
+										</p:column>
+										<p:column headerText="Accion" width="140">
+											<p:commandButton id="btnConsultarTratamiento2"
+												style="#{mensaje.iconoDetalle}"
+												rendered="#{t.modoEdicionLimitada}"
+												title="Consultar Tratamiento"
+												action="#{atencionOdontologica.cargarTratamientoUsuario(t)}"
+												process="dtbTratamientosUsuario" update=":formAtencion"
+												value="" />
+
+											<p:commandButton id="btnEditarTratamiento2"
+												style="#{mensaje.iconoEditar}"
+												rendered="#{!t.modoEdicionLimitada}"
+												title="Consultar el tratamiento"
+												action="#{atencionOdontologica.cargarTratamientoUsuario(t)}"
+												process="dtbTratamientosUsuario" update=":formAtencion"
+												value="" />
+
+											<p:commandButton id="btnConsentimiento"
+												style="background-image: url('../imagenes/c_mayuscula.png');#{mensaje.icono}"
+												action="#{atencionOdontologica.cargarConsentimiento(t)}"
+												value="" title="Registrar/Visualizar Consentimiento"
+												update=":formConsentimiento,:formAtencion" process="@this" />
+
+											<p:commandButton id="btnEvolucion"
+												style="#{mensaje.iconoEvolucion}"
+												rendered="#{t.modoEdicionLimitada}"
+												action="#{atencionOdontologica.cargarEvolucionesTratamiento(t)}"
+												value="" title="Cargar Evolucion del tratamiento"
+												update=":formAtencion,:formAtencion:panelEvolucion"
+												process="dtbTratamientosUsuario" />
+
+											<p:commandButton id="btnCrearNuevaCita"
+												style="#{mensaje.iconoCita}"
+												rendered="#{t.modoEdicionLimitada}"
+												action="#{atencionOdontologica.programarCita()}" value=""
+												title="Programar Cita Control"
+												update=":formAtencion:pnlNuevaCita"
+												process="dtbTratamientosUsuario" />
+
+
+
+
+
+										</p:column>
+									</p:dataTable>
+									<!-- FIN Listado Tratamientos -->
+									<br />
+									<!-- Inicio Formulario Tratamientos -->
+									<p:fieldset
+										legend="#{atencionOdontologica.tratamientoUsuario.accionTexto()} Plan Tratamiento"
+										rendered="#{atencionOdontologica.tratamientoUsuario!=null}">
+										<p:panelGrid style="width:100%"
+											styleClass="ui-panelgrid-blank  ">
+											<p:row>
+												<p:column style="width:150px;">
+													<p:outputLabel value="Fecha de Inicio:" />
+												</p:column>
+												<p:column>
+													<p:calendar label="Fecha Inicio:"
+														value="#{atencionOdontologica.tratamientoUsuario.fechaInicio}"
+														size="10" style="width:70px; " mask="true" pages="2"
+														pattern="#{mensaje.calendario_formatoFecha}"
+														locale="#{mensaje.calendario_locale}" />
+												</p:column>
+												<p:column colspan="2">
+													<p:outputLabel
+														value="Estado : #{atencionOdontologica.tratamientoUsuario.estadoTexto}"
+														style="font-weight:bold; font-size:14px; " />
+												</p:column>
+
+											</p:row>
+
+											<p:row>
+												<p:column style="width:150px;vertical-align:middle;">
+													<p:outputLabel value="Observaciones"
+														style="font-weight:bold; font-size:14px" />
+												</p:column>
+												<p:column colspan="3">
+													<p:inputTextarea
+														value="#{atencionOdontologica.tratamientoUsuario.observaciones}"
+														required="true" label="#{mensaje.descripcion}"
+														style="width:100%; font-size:14px">
+														<p:ajax event="blur" />
+													</p:inputTextarea>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column style="width:150px;">
+													<p:outputLabel value="Descuentos:"
+														style="font-weight:bold; font-size:14px" />
+												</p:column>
+												<p:column>
+													<p:inputNumber
+														value="#{atencionOdontologica.tratamientoUsuario.descuento}"
+														size="12" thousandSeparator="." decimalPlaces="0"
+														emptyValue="zero" symbol="$" style="width:50px; "
+														rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+														<p:ajax event="blur"
+															listener="#{atencionOdontologica.calcularTotal()}"
+															process="@this" update=":formAtencion:tabAtencion" />
+													</p:inputNumber>
+													<h:outputText
+														rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+														value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.descuento)}" />
+
+												</p:column>
+												<p:column style="width:150px;">
+													<p:outputLabel value="Total Tratamiento:"
+														style="font-weight:bold; font-size:14px" />
+												</p:column>
+												<p:column>
+													<h:outputText
+														value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.valorTratamiento)}" />
+
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column style="width:150px;">
+													<p:outputLabel value="Saldo:"
+														style="font-weight:bold; font-size:14px" />
+												</p:column>
+												<p:column>
+													<h:outputText
+														rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+														value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.saldo)}" />
+												</p:column>
+												<p:column style="width:150px;">
+													<p:outputLabel value="Contabilizar?"
+														style="font-weight:bold; font-size:14px" />
+												</p:column>
+												<p:column>
+													<p:selectBooleanButton
+														value="#{atencionOdontologica.tratamientoUsuario.contabilizar}"
+														onLabel="SI" offLabel="NO"
+														disabled="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+														style="width:85px" />
+												</p:column>
+											</p:row>
+
+										</p:panelGrid>
+										<br />
+
+										<p:dataTable id="dtbTratamientos"
+											value="#{atencionOdontologica.tratamientosCrear}" var="t"
+											emptyMessage="" rows="10"
+											rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada and atencionOdontologica.tratamientosCrear!=null and atencionOdontologica.tratamientosCrear.size()>0}">
+											<p:column headerText="Procedimientos disponibles">
+												<h:outputText value="#{t.nombre}" />
+											</p:column>
+											<p:column headerText="Valor" style="text-align:right">
+												<h:outputText
+													value="#{atencionOdontologica.getMoneda('COP',t.valor)}" />
+											</p:column>
+											<p:column headerText="Accion" width="100">
+												<p:commandButton id="btnAgregarProcedimiento"
+													style="#{mensaje.iconoAgregar}" rendered="#{!t.usado}"
+													action="#{atencionOdontologica.agregarTratamiento(t)}"
+													process="dtbTratamientos"
+													update=":formAtencion:tabAtencion" value="" />
+
+
+												<p:tooltip for="btnAgregarProcedimiento"
+													value="Agregar procedimiento al tratamiento"
+													rendered="#{!t.usado}" trackMouse="true" />
+
+											</p:column>
+										</p:dataTable>
+										<br />
+										<br />
+
+										<p:dataTable id="dtbDetalleTratamiento" rows="15" var="d"
+											emptyMessage=""
+											rendered="#{atencionOdontologica.tratamientoUsuario.detallesTratamientoCrear.size()>0}"
+											value="#{atencionOdontologica.tratamientoUsuario.detallesTratamientoCrear}">
+											<f:facet name="header">
+												<h:outputText value="Resumen Tratamiento del paciente" />
+											</f:facet>
+											<p:column headerText="Procedimiento">
+												<h:outputText value="#{d.tratamiento.nombre}" />
+											</p:column>
+											<p:column headerText="Estado"
+												rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicion}">
+												<h:outputText value="#{d.estadoTexto}" />
+											</p:column>
+											<p:column headerText="Cantidad" style="text-align:right"
+												width="90">
+												<p:inputNumber value="#{d.cantidad}" size="12"
+													thousandSeparator="." decimalPlaces="0" emptyValue="empty"
+													style="width:50px;text-align:right "
+													rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+													<p:ajax event="blur"
+														listener="#{atencionOdontologica.calcularTotal()}"
+														process="@this" update=":formAtencion:tabAtencion" />
+												</p:inputNumber>
+												<h:outputText value="#{d.cantidad}"
+													rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
+											</p:column>
+											<p:column headerText="Valor Unitario"
+												style="text-align:right" width="150">
+												<p:inputNumber value="#{d.valorUnitario}" symbol="$ "
+													size="12" thousandSeparator="." decimalPlaces="0"
+													emptyValue="empty" style="width:50px;text-align:right "
+													rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+													<p:ajax event="blur"
+														listener="#{atencionOdontologica.calcularTotal()}"
+														process="@this" update=":formAtencion:tabAtencion" />
+												</p:inputNumber>
+												<h:outputText
+													value="#{atencionOdontologica.getMoneda('COP',d.valorUnitario)}"
+													rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
+
+											</p:column>
+											<p:column headerText="Total" style="text-align:right"
+												width="150">
+												<h:outputText
+													value="#{atencionOdontologica.getMoneda('COP',d.valorTotal)}" />
+											</p:column>
+											<p:column headerText="Accion" width="100"
+												rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+												<p:commandButton style="#{mensaje.iconoBorrar}"
+													id="btnEliminarProcedimiento"
+													action="#{atencionOdontologica.eliminarDetalleTratamiento(d)}"
+													process="dtbDetalleTratamiento"
+													update=":formAtencion:tabAtencion" value="" />
+												<p:tooltip for="btnEliminarProcedimiento"
+													value="Eliminar procedimiento del tratamiento. Recuerde que debe guardar el tratamiento para conservar los cambios"
+													trackMouse="true" />
+
+											</p:column>
+											<f:facet name="footer">
+												<h:outputText
+													value="Total tratamiento: $#{atencionOdontologica.tratamientoUsuario.valorTratamiento}" />
+											</f:facet>
+
+										</p:dataTable>
+										<br />
+										<div align="center">
+											<p:commandButton
+												style="font-size:14px; font-weight:normal !important"
+												action="#{atencionOdontologica.guardarTratamientoUsuario(true)}"
+												rendered="#{atencionOdontologica.tratamientoUsuario!=null}"
+												process="pnlTratamiento"
+												update=":formAtencion,:formAtencion:panelTratamientoCompleto"
+												value=" Guardar Tratamiento " />
+											<p:spacer width="10" />
+											<p:commandButton id="btnImprimirCotizacion"
+												disabled="#{!atencionOdontologica.tratamientoUsuario.modoEdicion}"
+												style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+												action="#{atencionOdontologica.imprimirCotizacion()}"
+												process=":formAtencion:tabAtencion:pnlTratamiento"
+												value="Imprimir Cotizacion" ajax="false" />
+											<p:spacer width="10" />
+											<p:commandButton id="btnEvolucionTratamiento"
+												style="font-size:14px; font-weight:normal !important"
+												disabled="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+												action="#{atencionOdontologica.cargarEvolucionesTratamiento(atencionOdontologica.tratamientoUsuario)}"
+												value="Ver Evolucion"
+												update=":formAtencion,:formAtencion:panelEvolucion"
+												process="@this" />
+											<p:spacer width="10" />
+											<p:commandButton
+												style="font-size:14px; font-weight:normal !important"
+												action="#{atencionOdontologica.cancelarTratamientoUsuario()}"
+												process="@this" update=":formAtencion" value=" Cancelar " />
+										</div>
+									</p:fieldset>
+									<!-- Fin Formulario Tratamientos -->
+								</p:tab>
+							</p:tabView>
+							<div align="center">
+
+								<p:outputLabel value="#{mensaje.informacionRequerida}, "
+									style="font-size:10px" />
+								<p:outputLabel
+									value="(**) Datos personales del paciente y sus tartamientos son independientes de sus consultas/odontogramas"
+									style="font-size:10px" />
+
+							</div>
+							<br />
+
+
+						</div>
+					</p:outputPanel>
+
+				</div>
+
+			</div>
+
+			<ui:include src="/atencionOdontologica/cargarFoto.xhtml" />
+			<ui:include src="/atencionOdontologica/modalAcciones.xhtml" />
+			<ui:include
+				src="/atencionOdontologica/modalEvolucionTratamiento.xhtml" />
+		</h:form>
+
+
+		<ui:include src="/atencionOdontologica/armarDiente.xhtml" />
+		<ui:include src="/atencionOdontologica/documentosUsuario.xhtml" />
+		<ui:include src="/atencionOdontologica/documentosConsulta.xhtml" />
+		<ui:include src="/atencionOdontologica/crearConsentimiento.xhtml" />
+	</ui:define>
+</ui:composition>

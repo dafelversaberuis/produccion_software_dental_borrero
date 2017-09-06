@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog header="Evolución del tratamiento" width="800" height="600"
+		widgetVar="panelEvolucion" id="panelEvolucion"
+		resizable="true" closable="false" responsive="true" 	modal="true"	>
+		<p:outputPanel id="pnlEvolucion">
+			<p:panel rendered="#{atencionOdontologica.citaSeleccionada==null}">
+				<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+					styleClass="ui-panelgrid-blank" >
+					<p:outputLabel value="EVOLUCIÓN DEL TRATAMIENTO.  "
+						style="font-size:13px; font-weight:bold" />
+					<p:outputLabel
+						value="En esta sección puede agregar una nueva evolución del tratamiento y/o actualizar sus estados"
+						style="font-size:13px;" />
+					<p:outputLabel
+						value="Puede cargar la evolución de una cita programada o crear una nueva "
+						style="font-size:13px;" />
+					<p:outputLabel
+						value="También puede realizar el abono al tratamiento y programar futuras citas "
+						style="font-size:13px;" />
+					<p:panelGrid columns="3" cellpadding="0" cellspacing="0"
+					styleClass="ui-panelgrid-blank" >
+						<p:commandButton style="font-size:14px; font-weight:normal !important"
+						 action="#{atencionOdontologica.cargarNuevaEvolucion()}" disabled="#{atencionOdontologica.tratamientoUsuario.estado.equals('T')}"
+						   process="@this" update=":formAtencion:pnlEvolucion" value="Nueva Evolución" 
+						  title="Permite crear una evolución del tratamiento"/>
+						<p:spacer width="10" />
+						<p:commandButton style="font-size:14px; font-weight:normal !important"
+						 action="#{atencionOdontologica.programarCita()}" 
+						 disabled="#{atencionOdontologica.tratamientoUsuario.estado.equals('T')}"
+						   process="@this" update=":formAtencion:panelEvolucion,:formAtencion:pnlNuevaCita" value="Programar cita control" 
+						  title="Permite crear una evolución del tratamiento"/>
+					</p:panelGrid>
+				</p:panelGrid>
+			</p:panel>
+			<p:spacer height="15" rendered="#{atencionOdontologica.citaSeleccionada==null}"/>		
+			<p:dataTable id="dtbEvolucionSinTratamiento" rows="10" var="c"
+				emptyMessage=""
+				rendered="#{atencionOdontologica.citaSeleccionada==null and 
+				(atencionOdontologica.citasSinTratamiento!=null and atencionOdontologica.citasSinTratamiento.size()>0) 
+				and !atencionOdontologica.tratamientoUsuario.estado.equals('T')}"
+				value="#{atencionOdontologica.citasSinTratamiento}">
+				<f:facet name="header">
+					<h:outputText value="Cargar Evolución desde una cita asignada" />
+				</f:facet>
+				<p:column headerText="Fecha Cita">
+					<h:outputText value="#{atencionOdontologica.getFechaHora(c.fechaInicio)}" />
+				</p:column>	
+				<p:column headerText="Acciones">
+					<p:commandButton id="btnSeleccionarEvolucion"	style="#{mensaje.iconoAgregar}"	 rendered="#{!t.usado}"
+			            		action="#{atencionOdontologica.cargarEvolucion(c)}" 
+								process="@this" update=":formAtencion:pnlEvolucion" value="" />
+				</p:column>				
+			</p:dataTable>
+			<p:spacer height="15" rendered="#{atencionOdontologica.citaSeleccionada==null}"/>
+			<p:dataTable id="dtbEvolucionTratamiento" rows="10" var="c"
+				emptyMessage=""
+				rendered="#{atencionOdontologica.citaSeleccionada==null and 
+				(atencionOdontologica.tratamientoUsuario.evoluciones!=null and 
+				atencionOdontologica.tratamientoUsuario.evoluciones.size()>0)}"
+				value="#{atencionOdontologica.tratamientoUsuario.evoluciones}">
+				<f:facet name="header">
+					<h:outputText value="Evoluciones del tratamiento" />
+				</f:facet>
+				<p:column headerText="Fecha Cita">
+					<h:outputText value="#{atencionOdontologica.getFechaHora(c.fechaInicio)}" />
+				</p:column>	
+				<p:column headerText="Estado">
+					<h:outputText value="#{c.estadoTexto}" />
+				</p:column>	
+				<p:column headerText="Abono">
+					<h:outputText value="#{atencionOdontologica.getMoneda('COP',c.abono)}" />
+				</p:column>	
+				<p:column headerText="saldo">
+					<h:outputText value="#{atencionOdontologica.getMoneda('COP',c.saldo)}" />
+				</p:column>
+				<p:column headerText="Acciones">
+					<p:commandButton id="btnAsignarEvolucion"	style="#{mensaje.iconoEditar}"	
+					 rendered="#{c.estado.equals('P')}" 
+			            		action="#{atencionOdontologica.cargarEvolucion(c)}" 
+								process="@this" update=":formAtencion:pnlEvolucion" value="" />
+					<p:commandButton id="btnConsultarEvolucion"	style="#{mensaje.iconoDetalle}"	 rendered="#{!t.usado}"
+			            		action="#{atencionOdontologica.cargarEvolucion(c)}" 
+								process="@this" update=":formAtencion:pnlEvolucion" value="" />
+				</p:column>				
+			</p:dataTable>
+			 <p:fieldset legend="Registro de la evolución"     rendered="#{atencionOdontologica.citaSeleccionada!=null}">
+				<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
+					<p:row>
+				   		<p:column >	
+							<p:outputLabel for="profesional" value="Odontólogo:" />
+						</p:column>
+						<p:column colspan="3">
+							<p:selectOneMenu id="profesional" style="width:100%; font-size:14px;" label="Odontólogo"
+					   			value="#{atencionOdontologica.citaSeleccionada.profesional.idDocumento}"  required="true"
+					   			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">
+						    	<f:selectItems value="#{atencionOdontologica.odontologos}" />
+						  	</p:selectOneMenu>
+						</p:column>
+		 			</p:row>
+				  	<p:row>
+				  		<p:column >	
+					    	<p:outputLabel for="lstEstadoTratamiento" value="Estado del tratamiento:"/>
+					    </p:column>	
+					    <p:column  >						    
+							<p:selectOneMenu id="lstEstadoTratamiento" required="true"
+								style="width:100%; font-size:14px;" 
+								disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"
+								value="#{atencionOdontologica.tratamientoUsuario.estado}"
+								label="Estado del tratamiento">
+								<f:selectItem itemValue="I" itemLabel="Iniciado" />										
+								<f:selectItem itemValue="T" itemLabel="Terminado" />
+								<f:selectItem itemValue="S" itemLabel="Suspendido" />
+								<f:selectItem itemValue="C" itemLabel="Cancelado" />
+								<p:ajax event="change" update=":formAtencion:pnlEvolucion" listener="#{atencionOdontologica.cargarObservacionesEvolucion(atencionOdontologica.tratamientoUsuario)}" />
+							
+							</p:selectOneMenu>
+						</p:column>
+				   		<p:column >	
+				  	 		<p:outputLabel for="consultorio" value="Consultorio:" />
+				  	 	</p:column>
+				  	 	<p:column >	
+				 			<p:selectOneMenu id="consultorio" style="max-width:200px; font-size:14px;" label="Consultorio"
+					   			value="#{atencionOdontologica.citaSeleccionada.consultorio}" 	required="true"
+					   			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">
+						    	<f:selectItems value="#{atencionOdontologica.consultorios}" />
+						  	</p:selectOneMenu>
+		  				</p:column>				   		
+					</p:row>
+					
+				</p:panelGrid><br/>
+				<p:dataTable id="dtbDetalleTratamiento2" rows="15" var="d"
+					emptyMessage="No existen procedimientos asociados"
+					rendered="#{atencionOdontologica.tratamientoUsuario.detallesTratamiento.size()>0}"
+					value="#{atencionOdontologica.tratamientoUsuario.detallesTratamiento}">
+					<p:column headerText="Procedimiento">
+						<h:outputText value="#{d.tratamiento.nombre}" />
+					</p:column>
+					<p:column headerText="Estado"  width="200">
+						<p:selectOneMenu id="lstEstadoProcedimiento" required="true"
+							style="width:100%; font-size:14px;" 
+							value="#{d.estado}" disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"
+							label="Estado del Procedimiento">
+							<f:selectItem itemValue="R" itemLabel="Registrado" />
+							<f:selectItem itemValue="I" itemLabel="Iniciado" />										
+							<f:selectItem itemValue="T" itemLabel="Terminado" />
+							<f:selectItem itemValue="S" itemLabel="Suspendido" />
+							<p:ajax event="change" update=":formAtencion:pnlEvolucion" listener="#{atencionOdontologica.cargarObservacionesEvolucion(atencionOdontologica.tratamientoUsuario)}" />
+							
+						</p:selectOneMenu>
+					</p:column>
+									
+				</p:dataTable>
+				<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
+					<p:row >
+				       <p:column colspan="2" >
+				       		<p:outputLabel for="txtObservacionAutomatica" value="Observaciones Automáticas:" styleClass="textoNegrita"  /><br/>
+				       </p:column>	
+					   <p:column colspan="2"  >					   		
+						    <p:outputLabel for="txtObservacionEvolucion" value="Otras Observaciones: " styleClass="textoNegrita"  /><br/>
+				   	   </p:column>
+				   	 </p:row>				   	 
+					 <p:row>
+					   <p:column colspan="2" >
+					   		<p:inputTextarea style="width:200px;margin-bottom:10px" id="txtObservacionAutomatica" 
+				       			value="#{atencionOdontologica.citaSeleccionada.detalleEvolucionAutomatica}" 
+				       			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"/>
+					      </p:column>	
+					    <p:column colspan="2"  >		
+					    	<p:inputTextarea style="width:200px;margin-bottom:10px" id="txtObservacionEvolucion"
+				       			 value="#{atencionOdontologica.citaSeleccionada.detalleEvolucion}" 
+				       			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}" />
+				       </p:column>
+					 </p:row>
+					 <p:row>
+						<p:column style="width:150px;">	
+							<p:outputLabel  value="Valor Tratamiento:"	style="font-weight:bold; font-size:14px" />
+						</p:column>	
+					    <p:column  >
+					    	<h:outputText value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.valorTratamiento)}" />
+					   </p:column>
+					   <p:column style="width:150px;">	
+							<p:outputLabel  value="Saldo Actual:"	style="font-weight:bold; font-size:14px" />
+						</p:column>	
+					    <p:column  >
+					    	<h:outputText value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.saldo)}" />
+					   </p:column>
+					</p:row>
+					 <p:row>
+						 <p:column style="width:150px;">	
+							<p:outputLabel  value="Abono:"	style="font-weight:bold; font-size:14px" />						
+						 </p:column>
+						 <p:column>
+					    	<p:inputNumber value="#{atencionOdontologica.citaSeleccionada.abono}"  symbol="$"
+							     size="12" thousandSeparator="." decimalPlaces="0"	 emptyValue="zero" 
+							      disabled="#{atencionOdontologica.citaSeleccionada.estado.equals('T')}"
+							     style="width:50px; "  maxValue="#{atencionOdontologica.tratamientoUsuario.saldo}" >
+							 	<p:ajax event="blur" 	listener="#{atencionOdontologica.actualizarSaldo()}" 
+			            		 process="@this" 	update=":formAtencion:txtNuevoSaldo"/>
+							</p:inputNumber>
+					   	 </p:column>
+					     <p:column style="width:150px;">	
+							<p:outputLabel  value="Nuevo Saldo:"	style="font-weight:bold; font-size:14px" />
+						 </p:column>	
+					     <p:column  id="txtNuevoSaldo">
+					    	<h:outputText value="#{atencionOdontologica.getMoneda('COP',atencionOdontologica.citaSeleccionada.saldo)}" />
+					     </p:column>
+					 </p:row>
+					 <p:row>
+					 		<p:column ><p:outputLabel for="txtRecibo" value="N° Recibo:" styleClass="textoNegrita" /></p:column>
+						   <p:column >								   		
+						   	 <p:inputText id="txtRecibo"		value="#{atencionOdontologica.citaSeleccionada.recibo}"
+								 label="Acudiente"		style="min-width:200px;max-width:400px; font-size:14px; "  
+								  disabled="#{atencionOdontologica.citaSeleccionada.estado.equals('T')}"/>
+						   </p:column>	
+						   <p:column />
+						   <p:column />
+					 </p:row>
+				</p:panelGrid>    
+			 </p:fieldset>	
+			<br />
+			<div align="center">
+				<p:commandButton id="btnGuardarEvolucion" rendered="#{atencionOdontologica.citaSeleccionada!=null}"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.guardarEvolucionTratamiento()}"
+					process=":formAtencion:pnlEvolucion" value="Registrar Evolución"
+					 disabled="#{atencionOdontologica.citaSeleccionada.estado.equals('T')}"
+					update=":formAtencion:messages,:formAtencion:pnlEvolucion">
+				</p:commandButton>
+				<p:spacer width="10" />
+				<p:commandButton id="btnCancelarEvolucion" rendered="#{atencionOdontologica.citaSeleccionada!=null}"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.cancelarEvolucion()}"
+					process="@this" value="Regresar a Evoluciones"
+					update=":formAtencion:pnlEvolucion">
+				</p:commandButton>
+				<p:spacer width="10" />
+				<p:commandButton id="btnRegresarEvolucion"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.cerrarEvolucion()}"
+					process="@this" value="#{mensaje.regresar} a Tratamientos"
+					update=":formAtencion:tabAtencion">
+				</p:commandButton>
+
+			</div>
+
+
+		</p:outputPanel>
+
+	</p:dialog>
+
+	<p:dialog widgetVar="pnlNuevaCita" id="pnlNuevaCita" header="Detalles de la cita" 
+	  showEffect="clip" hideEffect="clip" closable="false"  >
+        <p:panelGrid id="panelDetalleCita" columns="2" styleClass="ui-panelgrid-blank  "
+       		 rendered="#{atencionOdontologica.citaSeleccionada!=null}">
+            <p:outputLabel value="Paciente:" />
+            <p:outputLabel value="#{atencionOdontologica.citaSeleccionada.paciente.nombres}" />
+			<p:outputLabel for="profesionalConsulta" value="Odontólogo:" />
+ 			<p:selectOneMenu id="profesionalConsulta" style="width:100%; font-size:14px;" label="Odontólogo"
+	   			value="#{atencionOdontologica.citaSeleccionada.profesional.idDocumento}" 
+	   			required="true">
+		    	<f:selectItems value="#{atencionOdontologica.odontologos}" />
+		  	</p:selectOneMenu>
+		  	
+		  	 <p:outputLabel for="consultorioCita" value="Consultorio:" />
+ 			<p:selectOneMenu id="consultorioCita" style="max-width:200px; font-size:14px;" label="Consultorio"
+	   			value="#{atencionOdontologica.citaSeleccionada.consultorio}" required="true"	>
+		    	<f:selectItems value="#{atencionOdontologica.consultorios}" />
+		  	</p:selectOneMenu>
+		  	
+		  	 <p:outputLabel for="estadoConsulta" value="Estado de la Consulta:" />
+		  	<p:selectOneMenu id="estadoConsulta" required="true"
+				style="width:100%; font-size:14px;"
+				value="#{atencionOdontologica.citaSeleccionada.estado}"
+				label="Estado">
+				<f:selectItem itemValue="R" itemLabel="Registrado" />
+				<f:selectItem itemValue="A" itemLabel="En Atención" />
+				
+			</p:selectOneMenu>
+            <p:outputLabel for="fechaInicio" value="Desde:"  />
+            <p:calendar id="fechaInicio" value="#{atencionOdontologica.citaSeleccionada.event.startDate}" 
+           		 timeZone="GMT-5" pattern="dd/MM/yyyy HH:mm"  required="true"  stepMinute="1"
+           		 mindate="#{atencionOdontologica.citaSeleccionada.fechaActual}">
+    			<p:ajax event="dateSelect"  process="@this" update="fechaFin"  listener="#{atencionOdontologica.actualizarFecha()}"/>
+    		</p:calendar>
+ 
+            <p:outputLabel for="fechaFin" value="Hasta:" />
+            <p:calendar id="fechaFin" value="#{atencionOdontologica.citaSeleccionada.event.endDate}" 
+            timeZone="GMT-5" pattern="dd/MM/yyyy HH:mm" required="true" stepMinute="5"
+             mindate="#{atencionOdontologica.citaSeleccionada.event.startDate}" >            
+             </p:calendar>
+ 
+        </p:panelGrid>
+        <br/>
+        <p:outputPanel id="pnlBotones" >
+          <div style="text-align:center;" >
+	       	
+	        <p:commandButton id="btnGuardar" process=":formAtencion:pnlNuevaCita"
+	        	style="font-size:14px; font-weight:normal !important"
+				action="#{atencionOdontologica.agregarCita()}"  
+				rendered="#{!atencionOdontologica.citaSeleccionada.modoEdicion}"
+				update=":formAtencion:panelDetalleCita,pnlBotones,formAtencion:messages"	
+				value="Guardar Cita" />
+			 <p:commandButton id="btnActualizar" process=":formAtencion:pnlNuevaCita"
+	        	style="font-size:14px; font-weight:normal !important" 
+	        	rendered="#{atencionOdontologica.citaSeleccionada.modoEdicion}"
+				action="#{atencionOdontologica.agregarCita()}"  
+				update=":formAtencion:panelDetalleCita,formAtencion:messages"	
+				value="Actualizar Cita" />
+			<p:spacer width="10" />
+			<p:commandButton id="btnCancelarCita" 
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.cancelarEvolucion()}"
+					process="@this" value="Cancelar"
+					update=":formAtencion:pnlNuevaCita" />
+			<p:spacer width="10" />
+			<p:commandButton  id="btnEnviarAgenda" process="@this"  
+			 	rendered="#{atencionOdontologica.citaSeleccionada.modoEdicion}"
+					style="font-size:14px; font-weight:normal !important"
+					action="/atencionOdontologica/agenda.xhtml?faces-redirect=true"
+					 value="Enviar a Consulta"  />
+	      </div>      
+	    </p:outputPanel>
+    </p:dialog>    
+
+</ui:composition>

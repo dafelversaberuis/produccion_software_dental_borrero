@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog header="Foto del usuario" width="750" height="400"
+		widgetVar="panelVerFoto" id="panelVerFoto" resizable="true"
+		closable="false" responsive="true">
+		<p:outputPanel id="pnlFoto">
+			<div align="left">
+				<p:panelGrid columns="2" cellpadding="0" cellspacing="0"
+					style="width:100%" styleClass="ui-panelgrid-blank">
+					<p:outputLabel value="Registrar/cambiar/reemplazar foto así:"
+						for="lstCambiarFoto" style="font-weight:bold; font-size:14px" />
+
+					<p:selectOneMenu id="lstCambiarFoto" required="true"
+						style="width:100%; font-size:14px;"
+						value="#{atencionOdontologica.formaCambioFoto}"
+						label="Forma cambiar foto">
+						<f:selectItem itemValue="C" itemLabel="Tomar con la cámara del PC" />
+						<f:selectItem itemValue="P"
+							itemLabel="Buscar foto en PC/Dispositivo" />
+
+
+
+						<p:ajax event="change" process="@this" update="pnlCargado" />
+
+					</p:selectOneMenu>
+				</p:panelGrid>
+				<p:outputPanel id="pnlCargado">
+					<div align="center">
+						<p:panelGrid columns="2" style="width:100%"
+							styleClass="ui-panelgrid-blank"
+							rendered="#{atencionOdontologica.formaCambioFoto!=null and atencionOdontologica.formaCambioFoto=='C'}">
+							<p:photoCam widgetVar="pc" id="pc" width="100" height="100"
+								listener="#{atencionOdontologica.webcamCapture}"
+								update="pnlCargado, @this" />
+
+							<p:commandButton value="Capturar foto aquí." type="button"
+								onclick="PF('pc').capture()">
+
+							</p:commandButton>
+
+						</p:panelGrid>
+					</div>
+
+					<p:panelGrid columns="3" style="width:100%;"
+						rendered="#{atencionOdontologica.formaCambioFoto!=null and atencionOdontologica.formaCambioFoto=='P'}"
+						styleClass="ui-panelgrid-blank">
+						<p:fileUpload id="fileCrear" cancelLabel="true"
+							dragDropSupport="true" style="width:100%;"
+							rendered="#{atencionOdontologica.usuario.tFile==null}"
+							fileUploadListener="#{atencionOdontologica.recibirFoto}"
+							multiple="false" fileLimit="1" fileLimitMessage="Sólo 1 archivo"
+							label="#{mensaje.busqueArchivo}" required="true" mode="advanced"
+							update=":formAtencion:messages, :formAtencion:pnlFoto"
+							auto="true" sizeLimit="10000000"
+							requiredMessage="Información requerida"
+							invalidSizeMessage="Excede el tamaño  permitido de 10MB!"
+							invalidFileMessage="Extensión de archivo incorrecta, solo fotos"
+							allowTypes="/(\.|\/)(jpg|JPG|gif|png|PNG|jpeg)$/" />
+
+
+
+
+
+
+					</p:panelGrid>
+					<div align="center">
+						<br />
+						<p:outputLabel value="Foto actual:"
+							style="font-weight:bold; font-size:14px" />
+						<br /> <img src="#{atencionOdontologica.usuario.tNombreFoto}"
+							style="height: 100px; width: auto" /> <br />
+
+
+						<p:commandLink value="(#{mensaje.limpiar})"
+							style="font-weight:bold; font-size:14px; color:red; "
+							action="#{atencionOdontologica.limpiarFotoCargada()}"
+							process="@this" update="pnlCargado"
+							rendered="#{atencionOdontologica.usuario.archivo != null}" />
+					</div>
+				</p:outputPanel>
+
+			</div>
+
+
+			<p:spacer height="10" />
+
+			<div align="center">
+				<p:commandButton id="btnBorrar"
+					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+					action="#{atencionOdontologica.cancelarFoto()}" process="@this"
+					value="#{mensaje.regresar}" update=":formAtencion">
+
+
+				</p:commandButton>
+
+			</div>
+			<p:outputLabel value="#{mensaje.informacionRequerida}"
+				style="font-size:10px" />
+
+			<p:blockUI block=":formAtencion:pnlFoto" trigger="btnBorrar">
+
+				<p:graphicImage value="../imagenes/cargando.gif" />
+			</p:blockUI>
+
+
+		</p:outputPanel>
+
+	</p:dialog>
+</ui:composition>

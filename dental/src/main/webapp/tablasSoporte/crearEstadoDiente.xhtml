@@ -1,0 +1,304 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/plantillas/principal.xhtml">
+
+	<ui:define name="body">
+		<h:form id="form">
+			<p:growl id="messages" showDetail="true" globalOnly="true" />
+			<div class="row x_title">
+				<div class="col-md-6">
+				<h3>
+					<p:outputLabel value="#{mensaje.moduloTablasSoporte}: "
+						styleClass="tituloPrincipal" />
+					<p:spacer width="2" />
+					<p:outputLabel value="#{mensaje.estadoDientes}"
+						styleClass="tituloPrincipal" /></h3>
+				</div>
+			</div>
+			<div align="center" class="titulo"></div>
+			<p:outputPanel id="pnlCasoUso">
+				<p:spacer height="10" />
+				<p:accordionPanel id="pnlCrearCasoUso">
+					<p:tab title="#{hacerMantenimiento.estadoDiente.accionTexto()} #{mensaje.estadoDiente}"
+						titleStyle="font-size:16px" closable="false">
+						<p:panelGrid columns="3" cellpadding="0" cellspacing="0"
+							styleClass="ui-panelgrid-blank" style="width: 100%;">
+							<p:outputLabel for="txtNombre" value="#{mensaje.nombre}"
+								style="font-weight:bold; font-size:14px; max-width:100px;" />
+							<p:inputText id="txtNombre"
+								value="#{hacerMantenimiento.estadoDiente.nombre}"
+								required="true" label="#{mensaje.nombre}" tabindex="1"
+								style="width:100%; font-size:14px" />
+							<p:message for="txtNombre" />
+							<p:outputLabel for="txtDescripcion"  value="#{mensaje.descripcion}"	style="font-weight:bold; font-size:14px" />
+							<p:inputTextarea id="txtDescripcion"	value="#{hacerMantenimiento.estadoDiente.descripcion}"
+								required="true" label="#{mensaje.descripcion}"
+								style="width:100%; font-size:14px" />	
+							<p:message for="txtDescripcion" />						
+							<p:outputLabel  value="Imagen Diente Completo:"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZonaTotal"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zonaTotal==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZonaTotal"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(PNG|png)$/" >
+									 <f:attribute name="opcion" value="0" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zonaTotalFile.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zonaTotal != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(0)}"
+									process="@this" update="pnlZonaTotal"
+									rendered="#{hacerMantenimiento.estadoDiente.zonaTotal != null}" />	
+								<p:graphicImage value="../imagenes/ayuda.png"
+									id="ayudaCargarArchivo" />
+								<p:tooltip value="#{mensaje.ayudaCargarTransparencias}"
+									trackMouse="true" for="ayudaCargarArchivo" />								
+							</p:panelGrid>
+							<p:spacer width="1"/>
+							<p:outputLabel value="¿El estado aplica a todo el diente?"
+								style="font-weight:bold; font-size:14px" />
+							<p:selectBooleanButton  value="#{hacerMantenimiento.estadoDiente.dienteCompleto}" 
+								onLabel="SI" offLabel="NO" 	onIcon="ui-icon-check" offIcon="ui-icon-close" style="width:80px" >
+								 <p:ajax update="form"  />
+							</p:selectBooleanButton>	
+						</p:panelGrid>
+						<p:panelGrid columns="4" cellpadding="0" cellspacing="0"	styleClass="ui-panelgrid-blank" 
+							id="pnlDienteCompleto" 	rendered="#{!hacerMantenimiento.estadoDiente.dienteCompleto}" >
+							<p:outputLabel  value="Zonas del diente"	style="font-weight:bold; font-size:14px" />
+							<img src="../imagenes/dientes/zonasdiente.png" style="height: 200px; width: auto" />
+							<p:spacer/>
+							<p:spacer/>
+							
+							<p:outputLabel  value="Imagen Zona 1"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZona1"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zona1==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZona1"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(png)$/" >
+									 <f:attribute name="opcion" value="1" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zona1File.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zona1 != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(1)}"
+									process="@this" update="pnlZona1"
+									rendered="#{hacerMantenimiento.estadoDiente.zona1!= null}" />									
+							</p:panelGrid>
+							<p:outputLabel  value="Imagen Zona 2"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZona2"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload  cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zona2==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZona2"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(png)$/" >
+									 <f:attribute name="opcion" value="2" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zona2File.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zona2 != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(2)}"
+									process="@this" update="pnlZona2"
+									rendered="#{hacerMantenimiento.estadoDiente.zona2 != null}" />									
+							</p:panelGrid>
+							<p:outputLabel  value="Imagen Zona 3"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZona3"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zona3==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZona3"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(png)$/" >
+									 <f:attribute name="opcion" value="3" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zona3File.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zona3 != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(3)}"
+									process="@this" update="pnlZona3"
+									rendered="#{hacerMantenimiento.estadoDiente.zona3 != null}" />									
+							</p:panelGrid>
+							<p:outputLabel  value="Imagen Zona 4"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZona4"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zona4==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZona4"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(png)$/" >
+									 <f:attribute name="opcion" value="4" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zona4File.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zona4 != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(4)}"
+									process="@this" update="pnlZona4"
+									rendered="#{hacerMantenimiento.estadoDiente.zona4 != null}" />									
+							</p:panelGrid>
+							<p:outputLabel  value="Imagen Zona 5"	style="font-weight:bold; font-size:14px" />
+							<p:panelGrid columns="3" style="width:100%;" id="pnlZona5"	styleClass="ui-panelgrid-blank">
+								<p:fileUpload cancelLabel="true"	dragDropSupport="true" style="width:100%;"
+									rendered="#{hacerMantenimiento.estadoDiente.zona5==null}"
+									fileUploadListener="#{hacerMantenimiento.recibirFoto}"
+									multiple="false" fileLimit="1"		fileLimitMessage="Sólo 1 archivo"
+									label="#{mensaje.busqueArchivo}" required="true"	mode="advanced" 
+									update=":form:messages, pnlZona5"	auto="true" sizeLimit="1000000"		
+									requiredMessage="Información requerida"
+									invalidSizeMessage="Excede el tamaño  permitido de 1024KB!"
+									invalidFileMessage="Sólo se admiten fotos PNG"		allowTypes="/(\.|\/)(png)$/" >
+									 <f:attribute name="opcion" value="5" />
+								</p:fileUpload>
+								<p:outputLabel
+									value="#{hacerMantenimiento.estadoDiente.zona5File.fileName}"
+									rendered="#{hacerMantenimiento.estadoDiente.zona5 != null}" />			
+								<p:commandLink value="#{mensaje.limpiar}"
+									style="font-weight:bold; font-size:14px"
+									action="#{hacerMantenimiento.limpiarFotoCargada(5)}"
+									process="@this" update="pnlZona5"
+									rendered="#{hacerMantenimiento.estadoDiente.zona5 != null}" />									
+							</p:panelGrid>
+						</p:panelGrid>
+						<p:spacer height="10" />
+						<div align="center">
+							<p:commandButton id="btnCrearCasoUso"
+								action="#{hacerMantenimiento.crearEstadoDiente()}"
+								style="font-size:14px"
+								process=":form" value="#{mensaje.guardar}" update=":form" />
+							<p:spacer width="10" />
+							<p:commandButton id="btnBorrarCasoUso"
+								action="#{hacerMantenimiento.cancelarEstadoDiente()}"
+								style="font-size:14px; font-weight: normal !important;"  
+								process="@this" value="#{mensaje.cancelar}" update=":form">
+								<p:resetInput target=":form:pnlCasoUso" />
+							</p:commandButton>
+						</div>
+						<p:outputLabel value="#{mensaje.informacionRequerida}"
+							style="font-size:10px" />
+						<p:blockUI block=":form:pnlCrearCasoUso"
+							trigger="btnCrearCasoUso, btnBorrarCasoUso">
+							<p:graphicImage value="../imagenes/cargando.gif" />
+						</p:blockUI>
+					</p:tab>
+				</p:accordionPanel>
+
+				<p:spacer height="30" />
+				<p:accordionPanel id="pnlDltRegistros">
+					<p:tab title="Estados del diente"
+						titleStyle="font-size:16px" closable="true">
+						<p:dataTable var="loc" id="dtlRegistros" widgetVar="dtlRegistros"
+							value="#{hacerMantenimiento.estadosDiente}" reflow="true"
+							rows="10" paginator="true" paginatorPosition="bottom"
+							draggableColumns="true"
+							emptyMessage="#{mensaje.noExistenciaRegistros}">
+
+							<f:facet name="header">
+								<div align="right">
+									<p:outputPanel>
+										<h:outputText value="#{mensaje.buscar}: " />
+										<p:inputText id="globalFilter"
+											onkeyup="PF('dtlRegistros').filter()" style="width:350px; height:30px"
+											placeholder="#{mensaje.palabrasClave}" />
+									</p:outputPanel>
+								</div>
+							</f:facet>
+
+							<p:column headerText="#{mensaje.nombre}" sortBy="#{loc.nombre}"
+								filterMatchMode="contains" filterBy="#{loc.nombre}"
+								style="font-size:14px">
+								<p:outputLabel value="#{loc.nombre}" style="font-weight:normal" />
+							</p:column>
+
+
+							<p:column headerText="#{mensaje.indicativoVigencia}"
+								sortBy="#{loc.estado}"
+								filterBy="#{loc.estado}" style="font-size:14px;"
+								filterStyle="display:'none'" filterMatchMode="contains">
+
+								<p:outputLabel value="#{mensaje.ESTADO_ACTIVO}"
+									style="font-weight:normal"
+									rendered="#{loc.estado=='A'}" />
+								<p:outputLabel value="#{mensaje.ESTADO_INACTIVO}"
+									style="font-weight:normal"
+									rendered="#{loc.estado=='I'}" />
+
+
+							</p:column>
+
+							<p:column headerText="#{mensaje.acciones}"
+								style="font-size:14px; text-align:center;">
+  
+								<p:commandButton    style="#{mensaje.iconoEditar}" id="btnIrEditar"
+									action="#{hacerMantenimiento.asignarEstadoDiente(loc)}" value=""
+									 process=":form:pnlDltRegistros" update=":form"  >
+									  <p:focus context=":form:pnlCrearCasoUso"/>  
+								</p:commandButton>
+
+							
+
+
+								<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
+									trackMouse="true" />
+
+
+								<p:commandButton id="btnIrEliminar"
+									 style="#{mensaje.iconoBorrar}"
+									 action="#{hacerMantenimiento.eliminarEstadoDiente(loc)}" value=""
+									 process=":form:pnlDltRegistros" update=":form"  >
+									 <p:confirm header="Eliminación de Estados" message="¿Desea eliminar el estado?" icon="ui-icon-alert" />
+								</p:commandButton>
+								<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
+									trackMouse="true" />
+							</p:column>
+						</p:dataTable>
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+					        <p:commandButton value="SI" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+					        <p:commandButton value="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+					    </p:confirmDialog>
+
+					</p:tab>
+				</p:accordionPanel>
+
+
+
+			</p:outputPanel>
+		</h:form>
+		<ui:include src="/tablasSoporte/editarAnamnesis.xhtml" />
+		<ui:include src="/tablasSoporte/eliminarAnamnesis.xhtml" />
+		<p:spacer height="500" />
+
+
+	</ui:define>
+</ui:composition>

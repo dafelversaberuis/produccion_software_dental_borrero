@@ -1,0 +1,283 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/plantillas/principal.xhtml">
+
+<ui:define name="body">
+	<style type="text/css">
+			
+		
+		.inputTexto{	   
+			    font-size: 13px!important;}
+		.textoNegrita{
+			font-weight:bold!important;
+			font-size:14px!important;
+		}
+		.ui-button-text-only .ui-button-text {
+		    padding: .3em 0em;
+		}
+		.botonOdontograma{
+			background-origin: content-box; 
+			background-image: url('../imagenes/dientes/dientesano.png');	
+			background-size: cover;
+			float:right; 
+			background-repeat:no-repeat; 
+			width:60px; 
+			height:60px;
+			border:0; 
+			background-color:transparent"
+		}
+		.ui-inputtextarea{
+			height:100px;
+		}
+		.ui-inputnumber {text-align: right;}
+	</style>
+	<h:form id="form">
+		<p:growl id="messages" showDetail="true" globalOnly="true" />
+		<div class="row x_title">
+			<div class="col-md-6">
+				<h2 class="project-title">#{mensaje.moduloPersonal}:
+					#{mensaje.usuariosSoftware}</h2>
+			</div>
+		</div>
+
+		<div align="center" class="titulo"></div>
+
+		<p:outputPanel id="pnlAdministrador">
+
+			<p:spacer height="10" />
+			<p:accordionPanel id="pnlCrear">
+				<p:tab  title="#{administrarPersonal.personal.accionTexto()} Usuario"
+					titleStyle="font-size:16px" closable="true">
+
+					<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
+			  			<p:row >					  			   
+					       <p:column >   	 <p:outputLabel for="txtDocumento" value="# Documento :"  />  </p:column>
+						   <p:column > 
+					   		  <p:inputNumber id="txtDocumento" value="#{administrarPersonal.personal.idDocumento}" 
+							     size="12" thousandSeparator="." decimalPlaces="0"	 emptyValue="empty" 
+							     style="width:50px; " tabindex="1"   /> 
+							</p:column>								   								   
+						   <p:column ><p:outputLabel for="calFechaNacimiento"	value="Fecha nacimiento"	styleClass="textoNegrita" />   </p:column>
+						   <p:column >
+							   	<h:panelGrid  columns="3" width="100%">
+							   		 <p:calendar id="calFechaNacimiento" label="Fecha nacimiento"
+										value="#{administrarPersonal.personal.fechaNacimiento}"
+										 size="10" 	style="width:70px; "  mask="true"	pages="#{mensaje.calendario_paginado}" 
+		       							pattern="#{mensaje.calendario_formatoFecha}" locale="#{mensaje.calendario_locale}"
+		       							navigator="#{mensaje.calendario_isNavegacion}"  yearRange="c-50:c" >
+		       							<p:ajax event="dateSelect" update="edadTexto" />
+		       						</p:calendar>  
+		       						<p:outputLabel id="edadTexto" value="#{administrarPersonal.personal.edadTexto} "	 />
+		       						
+		       					</h:panelGrid>
+						   </p:column>													   								   
+						   <p:column > 
+						   </p:column>	 					   					 
+						</p:row>										
+						<p:row >
+					       <p:column > <p:outputLabel for="txtNombre" value="Nombres" styleClass="textoNegrita"/></p:column>
+						   <p:column  > 
+						   		 <p:inputText id="txtNombre"
+								value="#{administrarPersonal.personal.nombres}"
+								required="true" label="Nombres"
+								style="min-width:200px;max-width:400px; font-size:14px; height:50px" /> 
+							</p:column>
+						   <p:column >	 <p:outputLabel for="txtApellido" value="Apellidos"
+								style="font-weight:bold; font-size:14px" />
+					   	   </p:column>
+						   <p:column  >
+						   		 <p:inputText id="txtApellido"
+								value="#{administrarPersonal.personal.apellidos}"
+								required="true" label="Apellidos"
+								style="min-width:200px;max-width:400px; font-size:14px; height:50px" />
+						   </p:column>									   				 
+						</p:row>						
+						<p:row >
+					       <p:column >   	<p:outputLabel for="lstEstadoCivil" value="Estado civil"	styleClass="textoNegrita" /> </p:column>
+						   <p:column > 
+						   		 <p:selectOneMenu id="lstEstadoCivil" required="false"
+									style="width:100%; font-size:14px;"
+									value="#{administrarPersonal.personal.estadoCivil}"
+									label="Estado civil">
+									<f:selectItem itemValue="S" itemLabel="Soltero/a" />
+									<f:selectItem itemValue="C" itemLabel="Casado/a" />
+									<f:selectItem itemValue="V" itemLabel="Viudo/a" />
+									<f:selectItem itemValue="D" itemLabel="Divorciado/a" />
+								</p:selectOneMenu>
+							</p:column>
+						    <p:column >	 <p:outputLabel for="lstGenero" value="Género" styleClass="textoNegrita"  />  	   </p:column>
+						   <p:column >								   		
+						   	 <p:selectOneRadio  id="lstGenero" required="false"
+								style="width:100%; font-size:14px; "
+								value="#{administrarPersonal.personal.genero}" label="Genero">
+								<f:selectItem itemValue="M" itemLabel="Masculino" />
+								<f:selectItem itemValue="F" itemLabel="Femenino" />
+							 </p:selectOneRadio>	
+						   </p:column>			 
+						</p:row>
+						
+						<p:row >
+					       <p:column ><p:outputLabel for="txtTelefono" value="Teléfono" styleClass="textoNegrita" /></p:column>
+						   <p:column > 
+						   		<p:inputNumber id="txtTelefono"		value="#{administrarPersonal.personal.telefono}"
+								     size="12"  decimalPlaces="0" thousandSeparator="" 	 emptyValue="empty"     style="width:50px; " /> 
+						   </p:column>
+						   <p:column ><p:outputLabel for="txtCorreo" value="Correo" styleClass="textoNegrita" /></p:column>
+						   <p:column >								   		
+						   	 <p:inputText id="txtCorreo"
+								value="#{administrarPersonal.personal.correoElectronico}"
+								required="true" label="Correo"
+								style="min-width:200px;max-width:400px; font-size:14px; height:50px"  />
+						   </p:column>			 
+						</p:row> 
+						<p:row >
+					       <p:column ><p:outputLabel for="lstTipoUsuario" value="Tipo de Usuario" styleClass="textoNegrita"  /></p:column>
+						   <p:column > 
+						   	 <p:selectOneMenu  id="lstTipoUsuario" required="true"
+								style="width:100%; font-size:14px; "
+								value="#{administrarPersonal.personal.tipoAdministracion}" label="Tipo Usuario">
+								<f:selectItem itemValue="C" itemLabel="Cliente" />
+								<f:selectItem itemValue="A" itemLabel="Administrador" />
+								<f:selectItem itemValue="O" itemLabel="Odontólogo" />
+								<f:selectItem itemValue="X" itemLabel="Auxiliar" />
+								<f:selectItem itemValue="S" itemLabel="Secretaria" />
+							 </p:selectOneMenu>
+						   </p:column>
+						  		 
+						</p:row> 
+						
+						
+					</p:panelGrid>
+
+					<p:spacer height="10" />
+					<div align="center">
+						<p:commandButton id="btnCrear" style="font-size:14px;"
+							action="#{administrarPersonal.crearAdministrador()}"
+							value="#{mensaje.guardar}" update=":form" />
+
+						<p:spacer width="10" />
+						<p:commandButton id="btnBorrar"
+							style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+							action="#{administrarPersonal.cancelarAdministrador()}"
+							process="@this" value="#{mensaje.cancelar}" update=":form">
+
+							<p:resetInput target=":form:pnlAdministrador" />
+
+						</p:commandButton>
+
+					</div>
+					<p:outputLabel value="#{mensaje.informacionRequerida}"
+						style="font-size:10px" />
+
+					<p:blockUI block=":form:pnlCrear" trigger="btnCrear, btnBorrar">
+
+						<p:graphicImage value="../imagenes/cargando.gif" />
+
+
+					</p:blockUI>
+				</p:tab>
+			</p:accordionPanel>
+
+			<p:spacer height="30" />
+			<p:accordionPanel id="pnlDtlAdministradores">
+				<p:tab title="Listado #{mensaje.usuariosSoftware}"
+					titleStyle="font-size:16px" closable="true">
+
+					<p:dataTable var="loc" id="dtlAdministradores"
+						value="#{administrarPersonal.administradores}" reflow="true"
+						rows="10" paginator="true" paginatorPosition="bottom"
+						draggableColumns="true"
+						emptyMessage="#{mensaje.noExistenciaAdministradores}">
+						<p:column headerText="#{mensaje.usuariosSoftware}"
+							filterMatchMode="contains"
+							sortBy="#{loc.nombres} #{loc.apellidos}"
+							filterBy="#{loc.nombres} #{loc.apellidos}"
+							style="font-size:14px">
+							<p:outputLabel value="#{loc.nombres} #{loc.apellidos}"
+								style="font-weight:normal; font-size:12px" />
+						</p:column>
+						<p:column headerText="#{mensaje.indicativo}"
+							sortBy="#{loc.estado}" style="font-size:14px">
+							<p:outputLabel value="#{mensaje.ESTADO_ACTIVO}"
+								style="font-weight:normal; font-size:12px"
+								rendered="#{loc.estado == 'A'}" />
+							<p:outputLabel value="#{mensaje.ESTADO_INACTIVO}"
+								style="font-weight:normal; font-size:12px"
+								rendered="#{loc.estado== 'I'}" />
+						</p:column>
+						<p:column headerText="Tipo de Usuario"
+							sortBy="#{loc.tipoAdministracion}" style="font-size:14px">
+							<p:outputLabel value="#{loc.tipoUsuarioTexto}"
+								style="font-weight:normal; font-size:12px"				/>
+							
+						</p:column>
+						
+						<p:column headerText="#{mensaje.correo}"
+							sortBy="#{loc.correoElectronico}" style="font-size:14px">
+							<p:outputLabel value="#{loc.correoElectronico}"
+								style="font-weight:normal; font-size:12px" />
+
+						</p:column>
+
+
+
+
+						<p:column headerText="#{mensaje.acciones}"
+							style="font-size:14px; text-align:center;">
+
+
+
+							<p:commandButton id="btnIrEditar"
+								style="background-origin: content-box; background-image: url('../imagenes/editar.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
+								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_EDITAR_ADMINISTRADOR')}"
+								value="" process=":form:pnlDtlAdministradores"
+								update=":formEditar" />
+
+							<p:commandButton id="btnIrEliminar"
+								style="background-origin: content-box; background-image: url('../imagenes/borrar.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
+								value=""
+								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_ELIMINAR_ADMINISTRADOR')}"
+								process="dtlAdministradores" update=":formEliminar" />
+
+							<p:commandButton id="btnIrClave" rendered="#{loc.tipoAdministracion!=null and !loc.tipoAdministracion.equals('C')}"
+								style="background-origin: content-box; background-image: url('../imagenes/c_mayuscula.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
+								value=""
+								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_CLAVE_ADMINISTRADOR')}"
+								process="dtlAdministradores" update=":formClave" />
+
+							<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
+								trackMouse="true" />
+
+							<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
+								trackMouse="true" />
+
+							<p:tooltip for="btnIrClave"
+								value="#{mensaje.generarClaveAdministrador}" trackMouse="true" />
+
+
+
+
+						</p:column>
+
+
+					</p:dataTable>
+
+				</p:tab>
+			</p:accordionPanel>
+
+		</p:outputPanel>
+	</h:form>
+
+	<ui:include src="/personal/editarAdministrador.xhtml" />
+	<ui:include src="/personal/eliminarAdministrador.xhtml" />
+	<ui:include src="/personal/cambiarClaveAdministrador.xhtml" />
+
+
+	<p:spacer height="800" />
+
+</ui:define>
+</ui:composition>

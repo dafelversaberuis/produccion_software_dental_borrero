@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="formConsentimiento">
+		<p:dialog header="Consentimiento de usuario" width="800" height="600"
+			widgetVar="panelConsentimiento" id="panelConsentimiento"
+			resizable="true" closable="false" responsive="true">
+			<p:outputPanel id="pnlConsentimiento">
+				<p:panel>
+					<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+						styleClass="ui-panelgrid-blank" style="width:100%"
+						rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+						<p:outputLabel value="CREACIÓN DEL CONSENTIMIENTO.  "
+							style="font-size:13px; font-weight:bold" />
+
+						<p:outputLabel styleClass="ui-message-warn ui-corner-all"
+							value="Recuerde que una vez guardado el consentimiento no se podrán editar este formulario ni los  montos del tratamiento "
+							style="font-size:14px;" />
+
+					</p:panelGrid>
+					<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
+						styleClass="ui-panelgrid-blank"
+						rendered="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+						<p:outputLabel value="VISUALIZACIÓN DEL CONSENTIMIENTO.  "
+							style="font-size:13px; font-weight:bold" />
+						<p:outputLabel styleClass="ui-message-warn ui-corner-all"
+							value="La información mostrada no está disponible para modificación "
+							style="font-size:13px;" />
+
+					</p:panelGrid>
+				</p:panel>
+				<br />
+				<p:dataTable id="dtbDetalleTratamiento" rows="15" var="d"
+					emptyMessage=""
+					rendered="#{atencionOdontologica.tratamientoUsuario.detallesTratamientoCrear.size()>0}"
+					value="#{atencionOdontologica.tratamientoUsuario.detallesTratamientoCrear}">
+					<f:facet name="header">
+						<h:outputText value="Plan de Tratamiento del paciente" />
+					</f:facet>
+					<p:column headerText="Procedimiento">
+						<h:outputText value="#{d.tratamiento.nombre}" />
+					</p:column>
+					<p:column headerText="Cantidad" style="text-align:right" width="90">
+						<h:outputText value="#{d.cantidad}" />
+					</p:column>
+					<p:column headerText="Valor Unitario" style="text-align:right"
+						width="150">
+						<h:outputText
+							value="#{atencionOdontologica.getMoneda('COP',d.valorUnitario)}" />
+					</p:column>
+					<p:column headerText="Total" style="text-align:right" width="150">
+						<h:outputText
+							value="#{atencionOdontologica.getMoneda('COP',d.valorTotal)}" />
+					</p:column>
+					<f:facet name="footer">
+						<h:outputText
+							value="Total tratamiento: #{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.valorTratamiento)}" />
+					</f:facet>
+
+				</p:dataTable>
+				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;">
+					<p:row>
+						<p:column style="width=150">
+							<h:outputText value="Cargar texto de consentimiento: " />
+
+						</p:column>
+						<p:column>
+							<p:selectOneMenu
+								value="#{atencionOdontologica.consentimientoSeleccionado.id}"
+								style="max-width:300px; font-size:14px;" label="Consentimientos"
+								readonly="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
+								<f:selectItems
+									value="#{atencionOdontologica.itemsConsentimiento}" />
+								<p:ajax event="change"
+									update="formConsentimiento:txtObservacionOdontograma"
+									listener="#{atencionOdontologica.cargarInformacionConsentimiento(atencionOdontologica.consentimientoSeleccionado.id)}" />
+							</p:selectOneMenu>
+						</p:column>
+
+					</p:row>
+					<p:row>
+						<p:column colspan="2">
+							<p:inputTextarea
+								value="#{atencionOdontologica.tratamientoUsuario.textoConsentimiento}"
+								id="txtObservacionOdontograma" height="100"
+								style="width:95%;margin-bottom:10px"
+								readonly="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
+						</p:column>
+					</p:row>
+					<p:row>
+
+						<p:column colspan="2">
+							<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
+								<p:outputLabel for="sigFirma" value="Firma"
+									style="font-weight:bold; font-size:14px" />
+								<p:signature id="sigFirma" style="width:400px; height:200px"
+									widgetVar="firma"
+									value="#{atencionOdontologica.tratamientoUsuario.firma}"
+									label="Firma" guideline="true"
+									readonly="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
+								<p:message for="sigFirma" />
+								<p:commandButton
+									rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+									style="background-origin: content-box; background-image: url('../imagenes/borrar.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
+									value="" onclick="PF('firma').clear()"
+									process=":formConsentimiento" id="btnFirma" update="sigFirma"
+									action="#{atencionOdontologica.limpiarFirmaConsentimiento()}" />
+
+
+								<p:commandButton
+									style="background-origin: content-box; background-image: url('../imagenes/ayuda.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
+									value="" id="ayudaFirma" />
+
+								<p:tooltip value="#{mensaje.limpiar}" trackMouse="true"
+									for="btnFirma"
+									rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
+								<p:tooltip value="#{mensaje.ayudaFirma}" trackMouse="true"
+									for="ayudaFirma" />
+
+
+								<p:commandButton
+									disabled="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+									style="font-size:14px; font-weight: bold; text-decoration: none !important; height:50px; width:auto"
+									action="#{atencionOdontologica.leerFirma()}" process="@this"
+									value="LEER FIRMA DEL DISPOSITIVO MÓVIL" update="sigFirma">
+									
+									
+								</p:commandButton>
+
+
+							</p:panelGrid>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<br />
+				<div align="center">
+					<p:commandButton id="btnArmarDiente"
+						disabled="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+						action="#{atencionOdontologica.guardarTratamientoUsuario(true)}"
+						process=":formConsentimiento" value="#{mensaje.guardar}"
+						update=":formConsentimiento, :formAtencion">
+						<p:confirm header="Guardar Consentimiento" icon="ui-icon-alert" />
+					</p:commandButton>
+
+					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+						<f:facet name="message">
+							<h:outputText value="¿Desea Guardar el Consentimiento? " />
+							<br />
+							<h:outputText
+								value="Recuerde que una vez guardado el consentimiento no se podrá editar este formulario ni los montos del tratamiento" />
+						</f:facet>
+						<div align="center">
+							<p:commandButton value="SI" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+							<p:commandButton value="NO" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+						</div>
+					</p:confirmDialog>
+					<p:spacer width="10" />
+					<p:commandButton id="btnImprimirConsentimiento"
+						disabled="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
+						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+						action="#{atencionOdontologica.imprimirConsentimiento()}"
+						process="@this" ajax="false" value="Imprimir consentimiento"
+						update=":formConsentimiento, :formAtencion">
+
+					</p:commandButton>
+					<p:commandButton id="btnRegresarDiente"
+						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
+						action="#{atencionOdontologica.cancelarTratamientoUsuario()}"
+						process="formConsentimiento" value="#{mensaje.regresar}"
+						update=":formAtencion,:formConsentimiento">
+					</p:commandButton>
+
+
+				</div>
+
+
+			</p:outputPanel>
+
+		</p:dialog>
+	</h:form>
+
+
+</ui:composition>

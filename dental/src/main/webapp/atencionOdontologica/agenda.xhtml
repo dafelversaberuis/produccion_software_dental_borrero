@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	template="/plantillas/principal.xhtml">
+	<ui:define name="body">
+		<style type="text/css">
+.ui-steps .ui-steps-item {
+	width: 20%;
+}
+
+.ui-panelgrid-cell {
+			    border-width: 1px;
+			    border-style: solid;
+			    border-color: inherit;
+			    padding: 4px 4px 0px !important;
+}
+.ui-state-highlight {
+	text-shadow: none !important;
+}
+
+.ui-steps.custom {
+	margin-bottom: 30px;
+}
+
+.ui-steps.custom .ui-steps-item .ui-menuitem-link {
+	height: 30px;
+	padding: 0 1em;
+}
+
+.ui-steps.custom .ui-steps-item .ui-steps-number {
+	background-color: #0081c2;
+	color: #FFFFFF;
+	display: inline-block;
+	width: 30px;
+	border-radius: 10px;
+	margin-top: -10px;
+	margin-bottom: 10px;
+}
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend {
+    padding: .6em 1em;
+    width: 100%;
+}
+ui-fieldset-content{
+	padding: 10px;
+}
+
+.fc-content{
+	color:white;
+}
+
+.inputTexto{	   
+	    font-size: 13px!important; }
+.textoNegrita{
+	font-weight:bold!important;
+	font-size:14px!important;
+}
+.ui-button-text-only .ui-button-text {
+    padding: .3em 0em;
+}
+.botonOdontograma{
+	background-origin: content-box; 
+	background-image: url('../imagenes/dientes/dientesano.png');	
+	background-size: cover;
+	float:right; 
+	background-repeat:no-repeat; 
+	width:60px; 
+	height:60px;
+	border:0; 
+	background-color:transparent"
+}
+.ui-inputtextarea{
+	height:100px;
+}
+.ui-inputnumber {text-align: right;}
+</style>
+ <h:form id="formAtencion">
+	<p:growl id="messages" showDetail="true" globalOnly="true" />
+	
+	<div class="row"><div class="row x_title">
+				<div class="col-md-6"> <h3>
+					<p:outputLabel value="Módulo atención:"
+						styleClass="tituloPrincipal" />
+					<p:spacer width="2" />  
+					<p:outputLabel value="Agenda"
+						styleClass="tituloPrincipal" /></h3>
+				</div>
+			</div>
+		<br />
+	  <div align="center">
+		<p:outputPanel id="pnlDetalleAtencion" >
+		  <div align="left">	
+			
+			<p:tabView id="tabAtencion"  activeIndex="#{atencionOdontologica.vistaActual}"  >	
+				<p:tab title="Agenda del día"  id="pnlDatosUsuario" >									  	
+			  		<p:schedule id="calendario" value="#{atencionOdontologica.calendario}" 
+			  		widgetVar="myschedule" timeZone="GMT-5" locale="es">
+ 
+			            <p:ajax event="dateSelect"  process="@this" listener="#{atencionOdontologica.onDateSelect}" update=":formAtencion:messages,:formAgenda" oncomplete="PF('eventDialog').show();" />
+			            <p:ajax event="eventSelect" process="@this" listener="#{atencionOdontologica.onEventSelect}" update=":formAtencion:messages,:formAgenda" />
+			            <p:ajax event="eventMove" process="@this" listener="#{atencionOdontologica.onEventMove}" update=":formAtencion:messages" />
+			            <p:ajax event="eventResize" process="@this" listener="#{atencionOdontologica.onEventResize}" update=":formAtencion:messages" />
+			 
+			        </p:schedule>
+ 
+					<br />		
+		  	
+				</p:tab>				
+			</p:tabView>
+			<br />
+			
+
+
+		 </div>
+		</p:outputPanel>
+
+	  </div>
+
+	</div>
+	 
+</h:form >
+<h:form id="formAgenda">
+	<p:growl id="messages" showDetail="true" globalOnly="true" />
+	<p:dialog widgetVar="eventDialog" id="eventDialog" header="Detalles de la cita" 
+	  showEffect="clip" hideEffect="clip" closable="false"  rendered="#{atencionOdontologica.citaSeleccionada!=null}">
+        <p:panelGrid id="eventDetails" columns="2" styleClass="ui-panelgrid-blank  ">
+            <p:outputLabel for="paciente" value="Paciente:" />
+            <p:autoComplete id="paciente"  style="width:100%!important;"
+				placeholder="Buscar un paciente por cédula o nombre"  
+				disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"						
+				forceSelection="true" minQueryLength="3" size="40" 							
+				label="Buscar Paciente" 	 required="true"
+				value="#{atencionOdontologica.textoConsulta}" 
+				completeMethod="#{atencionOdontologica.autocompletarUsuarios}">		
+				<p:ajax event="itemSelect" listener="#{atencionOdontologica.agregarUsuarioCita(atencionOdontologica.textoConsulta)}" 
+				update="paciente"  />
+			 </p:autoComplete>
+			 <p:spacer width="1"/><p:message for="paciente" />
+			 <p:outputLabel for="profesional" value="Odontólogo:" />
+ 			<p:selectOneMenu id="profesional" style="width:100%; font-size:14px;" label="Odontólogo"
+	   			value="#{atencionOdontologica.citaSeleccionada.profesional.idDocumento}" 
+	   			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">
+		    	<f:selectItems value="#{atencionOdontologica.odontologos}" />
+		  	</p:selectOneMenu>
+		  	
+		  	 <p:outputLabel for="consultorio" value="Consultorio:" />
+ 			<p:selectOneMenu id="consultorio" style="max-width:200px; font-size:14px;" label="Consultorio"
+	   			value="#{atencionOdontologica.citaSeleccionada.consultorio}" 	
+	   			disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">
+		    	<f:selectItems value="#{atencionOdontologica.consultorios}" />
+		  	</p:selectOneMenu>
+		  	
+		  	 <p:outputLabel for="estado" value="Estado de la Consulta:" />
+		  	<p:selectOneMenu id="estado" required="true"	style="width:100%; font-size:14px;" 
+		  		disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"
+				value="#{atencionOdontologica.citaSeleccionada.estado}"
+				label="Estado">
+				<f:selectItem itemValue="R" itemLabel="Registrado" />
+				<f:selectItem itemValue="A" itemLabel="En Atención" />
+				<f:selectItem itemValue="T" itemLabel="Terminado" />
+				<f:selectItem itemValue="P" itemLabel="Para Pago" />
+			</p:selectOneMenu>
+            <p:outputLabel for="fechaInicio" value="Desde:"  />
+            <p:calendar id="fechaInicio" value="#{atencionOdontologica.citaSeleccionada.event.startDate}" 
+           		 timeZone="GMT-5" pattern="dd/MM/yyyy HH:mm"  required="true"  stepMinute="5" disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">
+    			<p:ajax event="dateSelect"  process="@this" update="fechaFin"  listener="#{atencionOdontologica.actualizarFecha()}"/>
+    		</p:calendar>
+ 
+            <p:outputLabel for="fechaFin" value="Hasta:" />
+            <p:calendar id="fechaFin" value="#{atencionOdontologica.citaSeleccionada.event.endDate}" 
+            timeZone="GMT-5" pattern="dd/MM/yyyy HH:mm" required="true" stepMinute="5"
+             mindate="#{atencionOdontologica.citaSeleccionada.event.startDate}" 
+             disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}">            
+             </p:calendar>
+ 
+        </p:panelGrid>
+        <br/>
+        <p:outputPanel id="pnlBotones" >
+          <div style="text-align:center;" >
+	        <p:commandButton value="Regresar" 
+				style="font-size:14px; font-weight:normal !important"
+				action="#{atencionOdontologica.cancelarFormularioCita()}"
+				update=":formAgenda"   process="@this"  	/>
+			<p:spacer width="10" />
+	        <p:commandButton id="btnGuardar" process=":formAgenda"
+	        	rendered="#{!atencionOdontologica.citaSeleccionada.modoEdicion}"
+				style="font-size:14px; font-weight:normal !important"
+				
+				action="#{atencionOdontologica.agregarCita()}" 
+				oncomplete="PF('myschedule').update();" update="pnlBotones,formAtencion:messages"
+				 value="Guardar Cita" />
+			<p:commandButton id="btnActualizar" process=":formAgenda"
+				rendered="#{atencionOdontologica.citaSeleccionada.modoEdicion}"
+				style="font-size:14px; font-weight:normal !important"
+				action="#{atencionOdontologica.agregarCita()}" 
+				disabled="#{atencionOdontologica.citaSeleccionada.modoVisualizacion()}"
+				oncomplete="PF('myschedule').update();" update="eventDetails,formAtencion:messages"
+				 value="Actualizar Cita" />
+			<p:spacer width="10" />	 
+			<p:commandButton  id="btnConsulta" process=":formAgenda"  
+			 	rendered="#{atencionOdontologica.citaSeleccionada.modoEdicion}"
+					style="font-size:14px; font-weight:normal !important"
+					action="#{atencionOdontologica.pasaraConsulta()}"
+					 value="Enviar a Consulta"  />
+	      </div>      
+	    </p:outputPanel>
+    </p:dialog>    
+	
+</h:form>
+<script type="text/javascript">
+    PrimeFaces.locales['es'] = {
+        closeText: 'Cerrar',
+        prevText: 'Anterior',
+        nextText: 'Siguiente',
+        currentText: 'Hoy',
+        monthNames: ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+            'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+        monthNamesShort: ['Ene','Feb','Mar','Abr','May','Jun',
+            'Jul','Ago','Sep','Oct','Nov','Dic'],
+        dayNames: ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+        dayNamesShort: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+        dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+        firstDay: 1,
+        isRTL: false,
+        showMonthAfterYear: true,
+        yearSuffix: 'Año',
+        month: 'Mes',
+        week: 'Semana',
+        day: 'Dia',
+        allDayText : 'Todo el día'
+    };
+</script>
+
+</ui:define>
+</ui:composition>
