@@ -4,7 +4,6 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
-
 	<h:form id="formConsentimiento">
 		<p:dialog header="Consentimiento de usuario" width="800" height="600"
 			widgetVar="panelConsentimiento" id="panelConsentimiento"
@@ -16,11 +15,9 @@
 						rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}">
 						<p:outputLabel value="CREACIÓN DEL CONSENTIMIENTO.  "
 							style="font-size:13px; font-weight:bold" />
-
 						<p:outputLabel styleClass="ui-message-warn ui-corner-all"
 							value="Recuerde que una vez guardado el consentimiento no se podrán editar este formulario ni los  montos del tratamiento "
 							style="font-size:14px;" />
-
 					</p:panelGrid>
 					<p:panelGrid columns="1" cellpadding="0" cellspacing="0"
 						styleClass="ui-panelgrid-blank"
@@ -30,7 +27,6 @@
 						<p:outputLabel styleClass="ui-message-warn ui-corner-all"
 							value="La información mostrada no está disponible para modificación "
 							style="font-size:13px;" />
-
 					</p:panelGrid>
 				</p:panel>
 				<br />
@@ -60,13 +56,11 @@
 						<h:outputText
 							value="Total tratamiento: #{atencionOdontologica.getMoneda('COP',atencionOdontologica.tratamientoUsuario.valorTratamiento)}" />
 					</f:facet>
-
 				</p:dataTable>
 				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;">
 					<p:row>
 						<p:column style="width=150">
 							<h:outputText value="Cargar texto de consentimiento: " />
-
 						</p:column>
 						<p:column>
 							<p:selectOneMenu
@@ -80,7 +74,6 @@
 									listener="#{atencionOdontologica.cargarInformacionConsentimiento(atencionOdontologica.consentimientoSeleccionado.id)}" />
 							</p:selectOneMenu>
 						</p:column>
-
 					</p:row>
 					<p:row>
 						<p:column colspan="2">
@@ -92,7 +85,6 @@
 						</p:column>
 					</p:row>
 					<p:row>
-
 						<p:column colspan="2">
 							<p:panelGrid columns="8" styleClass="ui-panelgrid-blank">
 								<p:outputLabel for="sigFirma" value="Firma"
@@ -109,29 +101,20 @@
 									value="" onclick="PF('firma').clear()"
 									process=":formConsentimiento" id="btnFirma" update="sigFirma"
 									action="#{atencionOdontologica.limpiarFirmaConsentimiento()}" />
-
-
 								<p:commandButton
 									style="background-origin: content-box; background-image: url('../imagenes/ayuda.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
 									value="" id="ayudaFirma" />
-
 								<p:tooltip value="#{mensaje.limpiar}" trackMouse="true"
 									for="btnFirma"
 									rendered="#{!atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}" />
 								<p:tooltip value="#{mensaje.ayudaFirma}" trackMouse="true"
 									for="ayudaFirma" />
-
-
 								<p:commandButton
 									disabled="#{atencionOdontologica.tratamientoUsuario.modoEdicionLimitada}"
 									style="font-size:14px; font-weight: bold; text-decoration: none !important; height:50px; width:auto"
 									action="#{atencionOdontologica.leerFirma()}" process="@this"
 									value="LEER FIRMA DEL DISPOSITIVO MÓVIL" update="sigFirma">
-									
-									
 								</p:commandButton>
-
-
 							</p:panelGrid>
 						</p:column>
 					</p:row>
@@ -146,7 +129,6 @@
 						update=":formConsentimiento, :formAtencion">
 						<p:confirm header="Guardar Consentimiento" icon="ui-icon-alert" />
 					</p:commandButton>
-
 					<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 						<f:facet name="message">
 							<h:outputText value="¿Desea Guardar el Consentimiento? " />
@@ -168,7 +150,6 @@
 						action="#{atencionOdontologica.imprimirConsentimiento()}"
 						process="@this" ajax="false" value="Imprimir consentimiento"
 						update=":formConsentimiento, :formAtencion">
-
 					</p:commandButton>
 					<p:commandButton id="btnRegresarDiente"
 						style="font-size:14px; font-weight: normal; text-decoration: none !important;"
@@ -176,15 +157,8 @@
 						process="formConsentimiento" value="#{mensaje.regresar}"
 						update=":formAtencion,:formConsentimiento">
 					</p:commandButton>
-
-
 				</div>
-
-
 			</p:outputPanel>
-
 		</p:dialog>
 	</h:form>
-
-
 </ui:composition>

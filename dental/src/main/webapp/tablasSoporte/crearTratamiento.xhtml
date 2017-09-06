@@ -9,7 +9,6 @@
 	<ui:define name="body">
 		<h:form id="form">
 			<p:growl id="messages" showDetail="true" globalOnly="true" />
-			
 			<div class="row x_title">
 				<div class="col-md-6"> <h3>
 					<p:outputLabel value="#{mensaje.moduloTablasSoporte}: "
@@ -63,8 +62,7 @@
 									process="@this" update="pnlImagen"
 									rendered="#{hacerMantenimiento.tratamiento.imagen != null}" />									
 							</p:panelGrid>
-							
-						</p:panelGrid>
+					</p:panelGrid>
 						<p:spacer height="10" />
 						<div align="center">
 							<p:commandButton id="btnCrearCasoUso"
@@ -87,8 +85,7 @@
 						</p:blockUI>
 					</p:tab>
 				</p:accordionPanel>
-
-				<p:spacer height="30" />
+<p:spacer height="30" />
 				<p:accordionPanel id="pnlDltRegistros">
 					<p:tab title="Clases de Tratamiento"
 						titleStyle="font-size:16px" closable="true">
@@ -108,15 +105,12 @@
 									</p:outputPanel>
 								</div>
 							</f:facet>
-
-							<p:column headerText="#{mensaje.nombre}" sortBy="#{loc.nombre}"
+<p:column headerText="#{mensaje.nombre}" sortBy="#{loc.nombre}"
 								filterMatchMode="contains" filterBy="#{loc.nombre}"
 								style="font-size:14px">
 								<p:outputLabel value="#{loc.nombre}" style="font-weight:normal" />
 							</p:column>
-
-
-							<p:column headerText="#{mensaje.indicativoVigencia}"
+<p:column headerText="#{mensaje.indicativoVigencia}"
 								sortBy="#{loc.estado}"
 								filterBy="#{loc.estado}" style="font-size:14px;"
 								filterStyle="display:'none'" filterMatchMode="contains">
@@ -127,9 +121,7 @@
 								<p:outputLabel value="#{mensaje.ESTADO_INACTIVO}"
 									style="font-weight:normal"
 									rendered="#{!loc.estado}" />
-
-
-							</p:column>
+	</p:column>
 
 							<p:column headerText="#{mensaje.acciones}"
 								style="font-size:14px; text-align:center;">
@@ -139,46 +131,27 @@
 									 process="@this" update=":form" >
 									  <p:focus context=":form:pnlCrearCasoUso"/>  
 								</p:commandButton>
-
-							
-
-
-								<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
+	<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
 									trackMouse="true" />
-
-
 								<p:commandButton id="btnIrEliminar"  style="#{mensaje.iconoBorrar}" 
-								
-									action="#{hacerMantenimiento.eliminarTratamiento(loc)}"
+												action="#{hacerMantenimiento.eliminarTratamiento(loc)}"
 									value="" process="@this" update=":form" >
 									 <p:confirm header="Eliminación de Tratamientos" message="¿Desea eliminar el tratamiento?" icon="ui-icon-alert" />
 								</p:commandButton>
 								<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
 									trackMouse="true" />
-
-
-							</p:column>
-
-
-
-
-						</p:dataTable>
+</p:column>
+		</p:dataTable>
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 					        <p:commandButton value="SI" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
 					        <p:commandButton value="NO" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
 					    </p:confirmDialog>
-
 					</p:tab>
 				</p:accordionPanel>
-
-
-
-			</p:outputPanel>
+	</p:outputPanel>
 		</h:form>
 		<ui:include src="/tablasSoporte/editarAnamnesis.xhtml" />
 		<ui:include src="/tablasSoporte/eliminarAnamnesis.xhtml" />
 		<p:spacer height="500" />
-
-
 	</ui:define>
 </ui:composition>

@@ -4,14 +4,10 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
-
 <h:head>
-
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta name="viewport"
 		content="width=device-width, initial-scale=1, maximum-scale=1" />
-
-
 	<meta name="author" content="Quimerapps" />
 	<title>Dental software</title>
 	<meta name="description" content="Dental software" />
@@ -44,35 +40,25 @@
 }
 </style>
 </h:head>
-
 <body data-spy="scroll" data-target="#navigation" class="page-template">
 	<div class="loader"></div>
 	<header id="header"> <h:form id="formCliente">
-		<p:remoteCommand name="onload" process="@this" 
+		<p:remoteCommand name="onload" process="@this"
 			action="#{administrarSesionCliente.getNoRolAdmitido('ODONTOLOGO')}"
 			autoRun="true" />
-
 		<div class="header-in">
-
 			<h1 id="logo" style="font-size: 0 !important;">
 				<a href="/dental/home.jsf"><img
 					src="/dental/imagenes/logo-dentalsoft-1.png" alt="Dental software"
 					style="height: 80px; width: auto" /> </a>
 			</h1>
-
 			<a id="responsive-nav-button" class="responsive-nav-button" href="#"></a>
-
 			<nav id="navigation" class="navigation">
-
-
-
-
 			<ul>
 				<h:panelGroup
 					rendered="#{administrarSesionCliente!=null and administrarSesionCliente.personalSesion!=null and administrarSesionCliente.personalSesion.id!=null}">
 					<li class=""><a href="#" class="">Atención</a>
 						<ul class="">
-
 							<li><p:commandLink value="Odontologica"
 									title="Atención odontologica"
 									action="/atencionOdontologica/atencionOdontologica.xhtml?faces-redirect=true"
@@ -80,11 +66,7 @@
 							<li><p:commandLink value="Agenda" title="Agenda"
 									action="/atencionOdontologica/agenda.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
 						</ul></li>
-
-
-
 					<li class=""><a href="#" class="">Parámetros generales</a>
 						<ul class="">
 							<li><p:commandLink value="Tratamientos" title="Tratamientos"
@@ -98,100 +80,61 @@
 									title="Estados  del diente"
 									action="/tablasSoporte/crearConsentimiento.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-							
-
 							<li><p:commandLink value="Clases higiene oral"
 									title="Clases higiene oral"
 									action="/tablasSoporte/crearHigieneOral.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
 							<li><p:commandLink value="Clases de anamnesis"
 									title="Clases higiene oral"
 									action="/tablasSoporte/crearAnamnesis.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
 							<li><p:commandLink value="Clases de exámenes clínicos"
 									title="Clases higiene oral"
 									action="/tablasSoporte/crearExamenClinico.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
 							<li><p:commandLink value="Clases de habitos orales"
 									title="Clases de hábito oral"
 									action="/tablasSoporte/crearHabitoOral.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
-
-
-
-
-
-
 						</ul></li>
-
 					<li class=""><a href="#" class="">#{mensaje.personal}</a>
 						<ul class="">
-
 							<li><p:commandLink value="#{mensaje.usuariosSoftware}"
 									title="#{mensaje.usuariosSoftware}"
 									action="/personal/crearAdministrador.xhtml?faces-redirect=true"
 									ajax="false" /></li>
-
-
-
-
-
-
-
 						</ul></li>
-
-
-
 				</h:panelGroup>
-
-
 				<li class="current-menu-item"><p:commandLink
 						value="#{administrarSesionCliente.personalSesion.nombres} #{mensaje.cerrarSesion}"
 						ajax="false" title="#{mensaje.cerrarSesion}"
 						action="#{administrarSesionCliente.getCerrarSesion()}" /></li>
 			</ul>
-
-
 			</nav>
 		</div>
 	</h:form> </header>
 	<div id="wrapper" align="center">
-
 		<div style="width: 90%;" align="left">
 			<br /> <br /> <br /> <br />
 			<ui:insert name="body" />
 			<br /> <br /> <br />
-
 		</div>
-		<footer id="footer"> <section class="fondoazul">
-		<br />
+		<footer id="footer"> <section class="fondoazul"> <br />
 		DentalSoft (Software) - Autorizado a Dr. Ernesto Borrero and Cia<br />
 		#{mensaje.disenadoPor}
 		<div class="container">
 			<div class="row"></div>
-
 		</div>
-
 		</section> </footer>
 	</div>
-
-
-
-	<script src="/dental/plantillas/js/jquery.queryloader2.js"></script>
-	<script src="/dental/plantillas/js/jquery.easing.1.3.min.js"></script>
-	<script src="/dental/plantillas/js/jquery.cycle.all.min.js"></script>
-	<script src="/dental/plantillas/js/jquery.smoothscroll.js"></script>
-	<script src="/dental/plantillas/js/waypoints.min.js"></script>
-
-
-	<script src="/dental/plantillas/js/fancybox/jquery.fancybox.pack.js"></script>
-	<script src="/dental/plantillas/js/config.js"></script>
-	<script src="/dental/plantillas/js/custom.js"></script>
-
-
+	<script src="/consultoria/plantillas/js/jquery.queryloader2.js"></script>
+	<script src="/consultoria/plantillas/js/jquery.easing.1.3.min.js"></script>
+	<script src="/consultoria/plantillas/js/jquery.cycle.all.min.js"></script>
+	<script src="/consultoria/plantillas/js/jquery.smoothscroll.js"></script>
+	<script src="/consultoria/plantillas/js/waypoints.min.js"></script>
+	<script
+		src="/consultoria/plantillas/js/fancybox/jquery.fancybox.pack.js"></script>
+	<script src="/consultoria/plantillas/js/config.js"></script>
+	<script src="/consultoria/plantillas/js/custom.js"></script>
 </body>
 </html>

@@ -5,11 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	template="/plantillas/principal.xhtml">
-
 <ui:define name="body">
 	<style type="text/css">
-			
-		
 		.inputTexto{	   
 			    font-size: 13px!important;}
 		.textoNegrita{
@@ -43,16 +40,12 @@
 					#{mensaje.usuariosSoftware}</h2>
 			</div>
 		</div>
-
 		<div align="center" class="titulo"></div>
-
 		<p:outputPanel id="pnlAdministrador">
-
 			<p:spacer height="10" />
 			<p:accordionPanel id="pnlCrear">
 				<p:tab  title="#{administrarPersonal.personal.accionTexto()} Usuario"
 					titleStyle="font-size:16px" closable="true">
-
 					<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
 			  			<p:row >					  			   
 					       <p:column >   	 <p:outputLabel for="txtDocumento" value="# Documento :"  />  </p:column>
@@ -72,7 +65,6 @@
 		       							<p:ajax event="dateSelect" update="edadTexto" />
 		       						</p:calendar>  
 		       						<p:outputLabel id="edadTexto" value="#{administrarPersonal.personal.edadTexto} "	 />
-		       						
 		       					</h:panelGrid>
 						   </p:column>													   								   
 						   <p:column > 
@@ -149,10 +141,7 @@
 						   </p:column>
 						  		 
 						</p:row> 
-						
-						
 					</p:panelGrid>
-
 					<p:spacer height="10" />
 					<div align="center">
 						<p:commandButton id="btnCrear" style="font-size:14px;"
@@ -164,29 +153,20 @@
 							style="font-size:14px; font-weight: normal; text-decoration: none !important;"
 							action="#{administrarPersonal.cancelarAdministrador()}"
 							process="@this" value="#{mensaje.cancelar}" update=":form">
-
 							<p:resetInput target=":form:pnlAdministrador" />
-
 						</p:commandButton>
-
 					</div>
 					<p:outputLabel value="#{mensaje.informacionRequerida}"
 						style="font-size:10px" />
-
 					<p:blockUI block=":form:pnlCrear" trigger="btnCrear, btnBorrar">
-
 						<p:graphicImage value="../imagenes/cargando.gif" />
-
-
 					</p:blockUI>
 				</p:tab>
 			</p:accordionPanel>
-
 			<p:spacer height="30" />
 			<p:accordionPanel id="pnlDtlAdministradores">
 				<p:tab title="Listado #{mensaje.usuariosSoftware}"
 					titleStyle="font-size:16px" closable="true">
-
 					<p:dataTable var="loc" id="dtlAdministradores"
 						value="#{administrarPersonal.administradores}" reflow="true"
 						rows="10" paginator="true" paginatorPosition="bottom"
@@ -213,71 +193,45 @@
 							sortBy="#{loc.tipoAdministracion}" style="font-size:14px">
 							<p:outputLabel value="#{loc.tipoUsuarioTexto}"
 								style="font-weight:normal; font-size:12px"				/>
-							
 						</p:column>
-						
 						<p:column headerText="#{mensaje.correo}"
 							sortBy="#{loc.correoElectronico}" style="font-size:14px">
 							<p:outputLabel value="#{loc.correoElectronico}"
 								style="font-weight:normal; font-size:12px" />
-
 						</p:column>
-
-
-
-
 						<p:column headerText="#{mensaje.acciones}"
 							style="font-size:14px; text-align:center;">
-
-
-
 							<p:commandButton id="btnIrEditar"
 								style="background-origin: content-box; background-image: url('../imagenes/editar.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
 								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_EDITAR_ADMINISTRADOR')}"
 								value="" process=":form:pnlDtlAdministradores"
 								update=":formEditar" />
-
 							<p:commandButton id="btnIrEliminar"
 								style="background-origin: content-box; background-image: url('../imagenes/borrar.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
 								value=""
 								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_ELIMINAR_ADMINISTRADOR')}"
 								process="dtlAdministradores" update=":formEliminar" />
-
 							<p:commandButton id="btnIrClave" rendered="#{loc.tipoAdministracion!=null and !loc.tipoAdministracion.equals('C')}"
 								style="background-origin: content-box; background-image: url('../imagenes/c_mayuscula.png'); background-size: cover; background-repeat:no-repeat; width:16px; height:16px; vertical-align:bottom; border:0; background-color:transparent"
 								value=""
 								action="#{administrarPersonal.asignarAdministrador(loc,'MODAL_CLAVE_ADMINISTRADOR')}"
 								process="dtlAdministradores" update=":formClave" />
-
 							<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
 								trackMouse="true" />
-
 							<p:tooltip for="btnIrEditar" value="#{mensaje.editar}"
 								trackMouse="true" />
-
 							<p:tooltip for="btnIrClave"
 								value="#{mensaje.generarClaveAdministrador}" trackMouse="true" />
-
-
-
-
-						</p:column>
-
-
-					</p:dataTable>
-
+</p:column>
+	</p:dataTable>
 				</p:tab>
 			</p:accordionPanel>
-
 		</p:outputPanel>
 	</h:form>
-
 	<ui:include src="/personal/editarAdministrador.xhtml" />
 	<ui:include src="/personal/eliminarAdministrador.xhtml" />
 	<ui:include src="/personal/cambiarClaveAdministrador.xhtml" />
-
-
-	<p:spacer height="800" />
+<p:spacer height="800" />
 
 </ui:define>
 </ui:composition>
