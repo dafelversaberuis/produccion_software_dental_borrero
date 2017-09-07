@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+
 	<p:dialog header="Evolución del tratamiento" width="800" height="600"
 		widgetVar="panelEvolucion" id="panelEvolucion"
 		resizable="true" closable="false" responsive="true" 	modal="true"	>
@@ -153,6 +154,7 @@
 							
 						</p:selectOneMenu>
 					</p:column>
+									
 				</p:dataTable>
 				<p:panelGrid style="width:100%"  styleClass="ui-panelgrid-blank  ">
 					<p:row >
@@ -246,8 +248,12 @@
 				</p:commandButton>
 
 			</div>
+
+
 		</p:outputPanel>
+
 	</p:dialog>
+
 	<p:dialog widgetVar="pnlNuevaCita" id="pnlNuevaCita" header="Detalles de la cita" 
 	  showEffect="clip" hideEffect="clip" closable="false"  >
         <p:panelGrid id="panelDetalleCita" columns="2" styleClass="ui-panelgrid-blank  "
@@ -260,11 +266,13 @@
 	   			required="true">
 		    	<f:selectItems value="#{atencionOdontologica.odontologos}" />
 		  	</p:selectOneMenu>
+		  	
 		  	 <p:outputLabel for="consultorioCita" value="Consultorio:" />
  			<p:selectOneMenu id="consultorioCita" style="max-width:200px; font-size:14px;" label="Consultorio"
 	   			value="#{atencionOdontologica.citaSeleccionada.consultorio}" required="true"	>
 		    	<f:selectItems value="#{atencionOdontologica.consultorios}" />
 		  	</p:selectOneMenu>
+		  	
 		  	 <p:outputLabel for="estadoConsulta" value="Estado de la Consulta:" />
 		  	<p:selectOneMenu id="estadoConsulta" required="true"
 				style="width:100%; font-size:14px;"
@@ -272,6 +280,7 @@
 				label="Estado">
 				<f:selectItem itemValue="R" itemLabel="Registrado" />
 				<f:selectItem itemValue="A" itemLabel="En Atención" />
+				
 			</p:selectOneMenu>
             <p:outputLabel for="fechaInicio" value="Desde:"  />
             <p:calendar id="fechaInicio" value="#{atencionOdontologica.citaSeleccionada.event.startDate}" 
@@ -279,15 +288,18 @@
            		 mindate="#{atencionOdontologica.citaSeleccionada.fechaActual}">
     			<p:ajax event="dateSelect"  process="@this" update="fechaFin"  listener="#{atencionOdontologica.actualizarFecha()}"/>
     		</p:calendar>
+ 
             <p:outputLabel for="fechaFin" value="Hasta:" />
             <p:calendar id="fechaFin" value="#{atencionOdontologica.citaSeleccionada.event.endDate}" 
             timeZone="GMT-5" pattern="dd/MM/yyyy HH:mm" required="true" stepMinute="5"
              mindate="#{atencionOdontologica.citaSeleccionada.event.startDate}" >            
              </p:calendar>
+ 
         </p:panelGrid>
         <br/>
         <p:outputPanel id="pnlBotones" >
           <div style="text-align:center;" >
+	       	
 	        <p:commandButton id="btnGuardar" process=":formAtencion:pnlNuevaCita"
 	        	style="font-size:14px; font-weight:normal !important"
 				action="#{atencionOdontologica.agregarCita()}"  
@@ -315,4 +327,5 @@
 	      </div>      
 	    </p:outputPanel>
     </p:dialog>    
+
 </ui:composition>

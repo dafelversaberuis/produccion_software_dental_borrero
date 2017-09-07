@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+
 <h:form id="formDocumentoConsulta">
 	<p:dialog header="#{mensaje.documentosSoporteConsulta}" width="750"
 		height="400" widgetVar="panelVerDocumentoConsulta" id="panelVerDocumentoConsulta"
@@ -24,6 +25,7 @@
 							<p:ajax event="blur" />
 						</p:inputText>
 					</p:column>
+					
 				</p:row>
 				<p:row>
 					<p:column colspan="2">
@@ -35,20 +37,24 @@
 								fileUploadListener="#{atencionOdontologica.recibirArchivoConsulta}"
 								multiple="false" fileLimit="1" fileLimitMessage="Sólo 1 archivo"
 								label="#{mensaje.busqueArchivo}" required="true" mode="advanced"
-								update="pnlDocumentoConsulta" auto="true" sizeLimit="10000000"
+								update="pnlDocumentoConsulta" auto="true" sizeLimit="1000000"
 								requiredMessage="Información requerida"
-								invalidSizeMessage="Excede el tamaño  permitido de 10MB!"
+								invalidSizeMessage="Excede el tamaño  permitido de 1MB!"
 								invalidFileMessage="Extensión de archivo incorrecta, solo archivos multimedia, comprimidos, archivos office"
 								allowTypes="/(\.|\/)(jpg|jpeg|gif|png|pdf|doc|docx|xls|xlsx|ppt|pps|pptx|ppsx|zip|rar|7z|mp4|mov|avi|3gp)$/" />
-	<p:outputLabel
+	
+	
+							<p:outputLabel
 								value="#{atencionOdontologica.documentoConsulta.tFile.fileName}"
 								rendered="#{atencionOdontologica.documentoConsulta.archivo != null}" />
-								<p:commandLink value="#{mensaje.limpiar}"
+	
+							<p:commandLink value="#{mensaje.limpiar}"
 								style="font-weight:bold; font-size:14px"
 								action="#{atencionOdontologica.limpiarDocumentoConsulta()}"
 								process="@this" update="pnlDocumentoConsulta"
 								rendered="#{atencionOdontologica.documentoConsulta.archivo != null}" />
-								<p:graphicImage value="../imagenes/ayuda.png"
+	
+							<p:graphicImage value="../imagenes/ayuda.png"
 								id="ayudaCargarArchivo" />
 							<p:tooltip value="#{mensaje.ayudaCargarArchivo}"
 								trackMouse="true" for="ayudaCargarArchivo" />
@@ -57,6 +63,8 @@
 					</p:column>
 				</p:row>
 			</p:panelGrid>
+	
+	
 			<br />
 			<div align="center">
 				<p:commandButton id="btnCrear" style="font-size:14px;" 
@@ -70,26 +78,34 @@
 					action="#{atencionOdontologica.abrirModal('panelConsultaCompleta')}" process="@this"
 					value="Ver opciones de la consulta" update="formDocumentoConsulta,:formAtencion:panelConsultaCompleta">	
 				</p:commandButton>
+				
 				<p:commandButton id="btnBorrar"
 					style="font-size:14px; font-weight: normal; text-decoration: none !important;"
 					action="#{atencionOdontologica.cancelarDocumentoConsulta()}" process="@this"
 					value="#{mensaje.regresar}" update="pnlDocumentoConsulta">
-						<p:resetInput target=":formDocumentoConsulta" />
-					</p:commandButton>
+	
+					<p:resetInput target=":formDocumentoConsulta" />
+	
+				</p:commandButton>
 				
 			</div>
 			<p:outputLabel value="#{mensaje.informacionRequerida}"
 				style="font-size:10px" />
-				<p:blockUI block=":formDocumentoConsulta"
+	
+			<p:blockUI block=":formDocumentoConsulta"
 				trigger="btnCrear, btnBorrar">
-					<p:graphicImage value="../imagenes/cargando.gif" />
-				</p:blockUI>
+	
+				<p:graphicImage value="../imagenes/cargando.gif" />
+	
+	
+			</p:blockUI>
 			<p:spacer height="30" />
 			<p:dataTable var="doc" id="dtlDocumentos"
 				rendered="#{atencionOdontologica.consulta.documentos!=null}"
 				value="#{atencionOdontologica.consulta.documentos}" reflow="true"
 				rows="7" paginator="true" paginatorPosition="bottom"
 				draggableColumns="true }" emptyMessage="No existen documentos registrados para la consulta">
+
 				<p:column headerText="#{mensaje.nombre}" filterMatchMode="contains"
 					filterStyle="display:none" sortBy="#{doc.nombre}"
 					filterBy="#{doc.nombre}" style="font-size:12px">
@@ -102,6 +118,8 @@
 						style="#{mensaje.iconoDescargar}"
 						action="#{atencionOdontologica.descargarDocumentoConsulta(doc)}"
 						ajax="false" immediate="true" value="" />
+	
+	
 					<p:tooltip for="btnIrDescargar" value="#{mensaje.descargarArchivo}"
 						trackMouse="true" />
 					<p:commandButton id="btnIrEliminar"
@@ -110,9 +128,16 @@
 						process="dtlDocumentos"  update=":formDocumentoConsulta:dtlDocumentos"/>
 					<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
 						trackMouse="true" />
-					</p:column>
+	
+				</p:column>
+
+
 			</p:dataTable>
 		</p:outputPanel>
+
+
 	</p:dialog>
 </h:form>
+
+
 </ui:composition>

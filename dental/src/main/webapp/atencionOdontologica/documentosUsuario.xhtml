@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
+
 <h:form id="formDocumentoUsuario">
 	<p:dialog header="#{mensaje.documentosSoporte}" width="750"
 		height="400" widgetVar="panelVerDocumento" id="panelVerDocumento"
@@ -34,20 +35,24 @@
 								fileUploadListener="#{atencionOdontologica.recibirArchivoUsuario}"
 								multiple="false" fileLimit="1" fileLimitMessage="Sólo 1 archivo"
 								label="#{mensaje.busqueArchivo}" required="true" mode="advanced"
-								update="pnlDocumentoUsuario" auto="true" sizeLimit="10000000"
+								update="pnlDocumentoUsuario" auto="true" sizeLimit="1000000"
 								requiredMessage="Información requerida"
-								invalidSizeMessage="Excede el tamaño  permitido de 10MB!"
+								invalidSizeMessage="Excede el tamaño  permitido de 1MB!"
 								invalidFileMessage="Extensión de archivo incorrecta, solo archivos multimedia, comprimidos, archivos office"
 								allowTypes="/(\.|\/)(jpg|jpeg|gif|png|pdf|doc|docx|xls|xlsx|ppt|pps|pptx|ppsx|zip|rar|7z|mp4|mov|avi|3gp)$/" />
-	<p:outputLabel
+	
+	
+							<p:outputLabel
 								value="#{atencionOdontologica.documentoUsuario.tFile.fileName}"
 								rendered="#{atencionOdontologica.documentoUsuario.archivo != null}" />
-								<p:commandLink value="#{mensaje.limpiar}"
+	
+							<p:commandLink value="#{mensaje.limpiar}"
 								style="font-weight:bold; font-size:14px"
 								action="#{atencionOdontologica.limpiarDocumento()}"
 								process="@this" update="pnlDocumentoUsuario"
 								rendered="#{atencionOdontologica.documentoUsuario.archivo != null}" />
-								<p:graphicImage value="../imagenes/ayuda.png"
+	
+							<p:graphicImage value="../imagenes/ayuda.png"
 								id="ayudaCargarArchivo" />
 							<p:tooltip value="#{mensaje.ayudaCargarArchivo}"
 								trackMouse="true" for="ayudaCargarArchivo" />
@@ -56,6 +61,8 @@
 					</p:column>
 				</p:row>
 			</p:panelGrid>
+	
+	
 			<br />
 			<div align="center">
 				<p:commandButton id="btnCrear" style="font-size:14px;"
@@ -75,16 +82,21 @@
 			</div>
 			<p:outputLabel value="#{mensaje.informacionRequerida}"
 				style="font-size:10px" />
-				<p:blockUI block=":formDocumentoUsuario"
+	
+			<p:blockUI block=":formDocumentoUsuario"
 				trigger="btnCrear, btnBorrar">
-					<p:graphicImage value="../imagenes/cargando.gif" />
-				</p:blockUI>
+	
+				<p:graphicImage value="../imagenes/cargando.gif" />
+	
+	
+			</p:blockUI>
 			<p:spacer height="30" />
 			<p:dataTable var="doc" id="dtlDocumentos"
 				rendered="#{atencionOdontologica.usuario.documentos!=null }"
 				value="#{atencionOdontologica.usuario.documentos}" reflow="true"
 				rows="7" paginator="true" paginatorPosition="bottom"
 				draggableColumns="true" emptyMessage="No existen documentos registrados para el usuario">
+
 			<p:column headerText="#{mensaje.nombre}" filterMatchMode="contains"
 				filterStyle="display:none" sortBy="#{doc.nombre}"
 				filterBy="#{doc.nombre}" style="font-size:12px">
@@ -97,17 +109,28 @@
 					style="#{mensaje.iconoDescargar}"
 					action="#{atencionOdontologica.descargarDocumentoUsuario(doc)}"
 					ajax="false" immediate="true" value="" />
+
+
 				<p:tooltip for="btnIrDescargar" value="#{mensaje.descargarArchivo}"
 					trackMouse="true" />
 				<p:commandButton id="btnIrEliminar"
 					style="#{mensaje.iconoBorrar}"
 					action="#{atencionOdontologica.eliminarDocumentoUsuario(doc)}" value=""
 					process="dtlDocumentos"  update=":formDocumentoUsuario:pnlDocumentoUsuario"/>
+
+
 				<p:tooltip for="btnIrEliminar" value="#{mensaje.eliminar}"
 					trackMouse="true" />
+
 			</p:column>
+
+
 		</p:dataTable>
 		</p:outputPanel>
+
+
 	</p:dialog>
 </h:form>
+
+
 </ui:composition>

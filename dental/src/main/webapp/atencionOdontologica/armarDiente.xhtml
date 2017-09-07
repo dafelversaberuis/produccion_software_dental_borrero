@@ -28,12 +28,15 @@
 							styleClass="ui-message-warn ui-corner-all"
 							value="Para el diente elegido puede aplicar un estado a todo el diente ó a una de sus zonas" />
 
+
 					</p:panelGrid>
 				</p:panel>
 				<br />
+
 				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
 					id="pnlPreguntaEstado">
 					<p:row>
+
 						<p:column>
 							<p:outputLabel
 								value="¿Desea aplicar el nuevo estado a todo el diente?:" />
@@ -63,17 +66,22 @@
 								<p:ajax event="change" process="@this" update="btnArmarDiente" />
 							</p:selectOneMenu>
 						</p:column>
+
+
 					</p:row>
 				</p:panelGrid>
 				<br />
 				<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
 					id="pnlDienteCompleto"
 					rendered="#{!atencionOdontologica.dienteSeleccionado.dienteCompleto}">
+
 					<p:row>
+
 						<p:column style="vertical-align:middle !important">
 							<p:outputLabel
 								value="Elija para cada zona el estado del diente que aplica:" />
 						</p:column>
+
 						<p:column>
 							<p:panelGrid styleClass="ui-panelgrid-blank" style="width: 100%;"
 								columns="2">
@@ -118,10 +126,16 @@
 										value="#{atencionOdontologica.itemsEstadosDienteZona}" />
 									<p:ajax event="change" process="@this" update="btnArmarDiente" />
 								</p:selectOneMenu>
+
 							</p:panelGrid>
+
 						</p:column>
+
 					</p:row>
-</p:panelGrid>
+
+
+				</p:panelGrid>
+
 				<p:spacer height="10" />
 				<div align="center">
 					<p:commandButton id="btnArmarDiente"
@@ -136,14 +150,21 @@
 						action="#{atencionOdontologica.cerrarDiente()}" process="@this"
 						value="#{mensaje.regresar}" update=":formDiente">
 					</p:commandButton>
+
 				</div>
 				<p:outputLabel value="#{mensaje.informacionRequerida}"
 					style="font-size:10px" />
+
 				<p:blockUI block=":formDiente:pnlDiente" trigger="btnRegresarDiente">
 					<p:outputLabel value="Foto Actual:" styleClass="textoNegrita" />
 					<p:graphicImage value="../imagenes/cargando.gif" />
 				</p:blockUI>
+
+
 			</p:outputPanel>
+
 		</p:dialog>
 	</h:form>
+
+
 </ui:composition>
