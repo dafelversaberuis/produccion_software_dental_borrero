@@ -872,14 +872,13 @@ public class AtencionOdontologica extends ConsultarFuncionesAPI implements Seria
 						dienteAusente = this.estadosDiente.get(index);
 					else
 						dienteAusente = null;
-					
+
 					EstadoDiente dienteSinErupcionar = new EstadoDiente(IConstantes.ID_DIENTE_SIN_ERUPCIONAR);
 					index = this.estadosDiente.indexOf(dienteSinErupcionar);
 					if (index >= 0)
 						dienteSinErupcionar = this.estadosDiente.get(index);
 					else
 						dienteSinErupcionar = null;
-					
 
 					this.consulta.setDientesOdontograma(new ArrayList<Diente>());
 					Boolean dientesLeche = true;
@@ -1360,7 +1359,7 @@ public class AtencionOdontologica extends ConsultarFuncionesAPI implements Seria
 					if (index >= 0)
 						this.consulta.getDientesOdontograma().set(index, this.dienteSeleccionado);
 
-					if (modal){
+					if (modal) {
 						this.mostrarMensajeGlobal("Estado aplicado. No olvide guardar cambios", "advertencia");
 						this.cerrarModal("panelDetalleDiente");
 					}
